@@ -534,7 +534,7 @@ async function appendGroupMessage(msg) {
                  window.socket.emit('pin_message', {
                      groupId: currentGroupId,
                      channelId: activeChannelId,
-                     messageId: msg.id,
+                     messageId: msgId,
                      username: me,
                      action: action
                  });

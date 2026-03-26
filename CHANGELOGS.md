@@ -158,7 +158,7 @@
 
 ---
 
-## **Zylo-Beta-0.5.11** — *The Specialized Modes Update* *(Latest)*
+## **Zylo-Beta-0.5.11** — *The Specialized Modes Update*
 
 ### NEW :
 - **AI Specialized Modes**: Task-specific modes (Thinking, Planning, Code, Review) for Diszi and Zily assistants.
@@ -175,3 +175,23 @@
 ### FIX :
 - **Group Modal Visibility**: Corrected text and background colors in groups modal for light mode readability.
 - **Sidebar Button Polish**: Fixed visibility and hover states for the "Add Group" button in light mode.
+
+---
+
+## **Zylo-Beta-0.5.12** — *The Security & Polish Update* *(Latest)*
+
+### NEW :
+- **Security Wizard**: Replaced inline account setting forms with a secure, multi-step 2FA authentication modal for changing passwords and deleting accounts.
+- **Service Worker (v5)**: Upgraded caching mechanisms with a network-first strategy and auto-reloading to ensure you always get the latest code.
+- **Backend Audit Logs**: Added server-side tracking and logic validation for sensitive operations.
+
+### IMPROVEMENT :
+- **UI/UX Refinement**: Completely revamped the Friends and DM screens with modern hover effects, pill layouts, and dynamic action buttons.
+- **Profile Card**: Redesigned the User Preview Modal with an overlapping avatar, refined backgrounds, and a much cleaner structure.
+- **Mobile UX**: Added a dedicated mobile close button for the Groups sidebar to make mobile navigation smoother.
+- **Mobile Chat**: Improved message layout to eliminate awkward trailing blank spaces under images.
+
+### FIX :
+- **Messaging Bug**: Fixed synchronization issues between frontend and backend when pinning messages.
+- **Media Gallery Bug**: Resolved an issue where newly sent images via live sockets were failing to register in the user's Media Gallery.
+- **Chat UI Bug**: Eliminated unwanted padding/spacing glitches floating at the top of the chat panel.

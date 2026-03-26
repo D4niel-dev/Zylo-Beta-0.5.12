@@ -2421,12 +2421,33 @@ def update_email():
     return jsonify({"success": True, "email": new_email})
 
 
+@app.route('/api/verify-password', methods=['POST'])
+def verify_password():
+    data = request.json or {}
+    username = (data.get("username") or "").strip()
+    password = data.get("password")
+    if not username or not password:
+        return jsonify({"success": False, "error": "Missing credentials"}), 400
+
+    users = load_users()
+    idx, user = _find_user(users, username)
+    if user is None:
+        return jsonify({"success": False, "error": "User not found"}), 404
+
+    if user.get("password") != password:
+        return jsonify({"success": False, "error": "Incorrect password"}), 401
+        
+    return jsonify({"success": True})
+
+
 @app.route('/api/update-password', methods=['POST'])
 def update_password():
     data = request.json or {}
     username = (data.get("username") or "").strip()
     old_password = data.get("oldPassword")
     new_password = data.get("newPassword")
+    reason = data.get("reason", "Unknown")
+    
     if not username or not old_password or not new_password:
         return jsonify({"success": False, "error": "Missing fields"}), 400
 
@@ -2440,6 +2461,7 @@ def update_password():
 
     users[idx]["password"] = new_password
     save_users(users)
+    print(f"[SECURITY] User '{username}' changed password. Reason: {reason}")
     return jsonify({"success": True})
 
 
@@ -2468,15 +2490,23 @@ def update_settings():
 def delete_account():
     data = request.json or {}
     username = (data.get("username") or "").strip()
-    if not username:
-        return jsonify({"success": False, "error": "Missing username"}), 400
+    password = data.get("password")
+    reason = data.get("reason", "Unknown")
+    
+    if not username or not password:
+        return jsonify({"success": False, "error": "Missing credentials"}), 400
 
     users = load_users()
-    new_users = [u for u in users if u.get("username") != username]
-    if len(new_users) == len(users):
+    idx, user = _find_user(users, username)
+    if user is None:
         return jsonify({"success": False, "error": "User not found"}), 404
+        
+    if user.get("password") != password:
+        return jsonify({"success": False, "error": "Incorrect password"}), 401
 
+    new_users = [u for u in users if u.get("username") != username]
     save_users(new_users)
+    print(f"[SECURITY] User '{username}' deleted account. Reason: {reason}")
 
     # Remove uploads dir if exists
     user_upload_dir = os.path.join(UPLOADS_DIR, username)
@@ -2690,14 +2720,30 @@ def dm_media():
         return jsonify({"success": False, "error": "Missing userA/userB"}), 400
     
     media_msgs = []
-    # Filter for messages with fileData (images/videos) or sticker_src
+    # Filter for messages with fileData, sticker_src, or attachments containing images/videos
     for m in (load_dms() or []):
         if ((m.get('from') == user_a and m.get('to') == user_b) or 
             (m.get('from') == user_b and m.get('to') == user_a)):
             
-            # Check for media content
+            # Legacy format: fileData or sticker_src directly on the message
             if m.get('fileData') or m.get('sticker_src') or (m.get('type') == 'image') or (m.get('type') == 'video'):
                 media_msgs.append(m)
+            
+            # New format: attachments array with individual file entries
+            elif m.get('attachments'):
+                for att in m['attachments']:
+                    ft = (att.get('fileType') or '').lower()
+                    if ft in ('image', 'video') or ft.startswith('image/') or ft.startswith('video/'):
+                        media_msgs.append({
+                            'url': att.get('url'),
+                            'fileName': att.get('originalName') or att.get('filename') or att.get('fileName'),
+                            'fileType': ft,
+                            'type': 'image' if 'image' in ft else 'video',
+                            'from': m.get('from'),
+                            'to': m.get('to'),
+                            'ts': m.get('ts') or m.get('createdAt', 0),
+                            'timestamp': m.get('createdAt', 0),
+                        })
                 
     return jsonify({"success": True, "media": media_msgs})
 
@@ -3639,17 +3685,36 @@ def get_pinned_messages(group_id, channel_id):
         
     # Fetch actual messages from group['messages']
     all_msgs = group.get('messages', [])
-    # Filter by IDs
-    found_msgs = [m for m in all_msgs if m.get('id') in pinned_ids]
     
-    # Sort by timestamp to keep order? Or keep pin order?
-    # Usually pin order (insertion order in list) is preferred, but here we just return them.
-    # To preserve pin order:
-    ordered_msgs = []
-    msg_map = {m['id']: m for m in found_msgs}
+    # Convert pinned_ids to a set of strings for flexible matching
+    pinned_set = set()
     for pid in pinned_ids:
-        if pid in msg_map:
-            ordered_msgs.append(msg_map.get(pid))
+        pinned_set.add(str(pid))
+    
+    # Match messages by id, timestamp, or ts (frontend uses fallback IDs)
+    def msg_matches_pin(m):
+        for field in ['id', 'timestamp', 'ts']:
+            val = m.get(field)
+            if val is not None and str(val) in pinned_set:
+                return True
+        return False
+    
+    found_msgs = [m for m in all_msgs if msg_matches_pin(m)]
+    
+    # Preserve pin order
+    ordered_msgs = []
+    # Build a map from any possible ID to the message
+    msg_map = {}
+    for m in found_msgs:
+        for field in ['id', 'timestamp', 'ts']:
+            val = m.get(field)
+            if val is not None:
+                msg_map[str(val)] = m
+    
+    for pid in pinned_ids:
+        msg = msg_map.get(str(pid))
+        if msg and msg not in ordered_msgs:
+            ordered_msgs.append(msg)
             
     return jsonify({"success": True, "messages": ordered_msgs})
 

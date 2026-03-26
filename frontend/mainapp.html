@@ -277,7 +277,15 @@
               >
                 <i data-feather="bell" class="w-[18px] h-[18px]"></i>
               </button>
-              <i data-feather="chevron-down" class="w-4 h-4 text-discord-gray-400 group-hover:text-white transition-colors ml-1"></i>
+              <i data-feather="chevron-down" class="hidden md:inline-block w-4 h-4 text-discord-gray-400 group-hover:text-white transition-colors ml-1"></i>
+              <!-- Mobile close button -->
+              <button
+                class="md:hidden text-discord-gray-400 hover:text-white p-1 ml-1 transition-colors z-20"
+                aria-label="Close Sidebar"
+                onclick="event.stopPropagation(); toggleSidebar();"
+              >
+                <i data-feather="x" class="w-[18px] h-[18px]"></i>
+              </button>
             </div>
             <div class="flex items-center text-discord-gray-400 text-xs font-medium opacity-80 relative z-10">
               <span id="groupPanelDesc" class="truncate">Group description</span>
@@ -974,12 +982,67 @@
               </h2>
               <span
                 class="bg-discord-blurple px-3 py-1 rounded-full text-xs font-bold text-white"
-                >Beta-0.5.11</span
+                >Beta-0.5.12</span
               >
             </div>
 
             <div class="space-y-4">
-              <!-- v1.5.1 -->
+              <!-- Beta-0.5.12 -->
+              <div
+                class="bg-discord-gray-800 p-4 rounded-xl border border-discord-gray-700 shadow-xl overflow-hidden relative"
+              >
+                <div
+                  class="absolute top-0 right-0 w-32 h-32 bg-discord-blurple/10 rounded-full -mr-16 -mt-16 blur-3xl pointer-events-none"
+                ></div>
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="font-bold text-white text-lg">
+                    Beta-0.5.12 — The Security & Polish Update
+                  </h3>
+                  <span
+                    class="text-xs font-bold text-discord-blurple bg-discord-blurple/10 px-2 py-1 rounded"
+                    >Mar 26, 2026</span
+                  >
+                </div>
+                <ul class="text-sm text-discord-gray-300 space-y-2 list-none">
+                  <li class="flex gap-2">
+                    <span class="text-discord-blurple">•</span>
+                    <span
+                      ><strong>Security Wizard</strong>: Secure, multi-step 2FA modal for changing passwords and deleting accounts.</span
+                    >
+                  </li>
+                  <li class="flex gap-2">
+                    <span class="text-discord-blurple">•</span>
+                    <span
+                      ><strong>Service Worker (v5)</strong>: Reliable caching with network-first strategies and instant update reloading.</span
+                    >
+                  </li>
+                  <li class="flex gap-2">
+                    <span class="text-discord-blurple">•</span>
+                    <span
+                      ><strong>Friends & DM UI</strong>: A modern Discord-like overhaul with clean pill layouts and slick hover interactions.</span
+                    >
+                  </li>
+                  <li class="flex gap-2">
+                    <span class="text-discord-blurple">•</span>
+                    <span
+                      ><strong>Profile Card Overhaul</strong>: Redesigned the User Preview Modal with overlapping avatars and cleaner data structure.</span
+                    >
+                  </li>
+                  <li class="flex gap-2">
+                    <span class="text-discord-blurple">•</span>
+                    <span
+                      ><strong>Mobile Polish</strong>: Added a dedicated group sidebar close button and fixed frustrating image gaps in mobile chats.</span
+                    >
+                  </li>
+                  <li class="flex gap-2">
+                    <span class="text-discord-blurple">•</span>
+                    <span
+                      ><strong>Sync Stability</strong>: The Media Gallery and Message Pinning features now sync perfectly with the backend live sockets.</span
+                    >
+                  </li>
+                </ul>
+              </div>
+              <!-- Beta-0.5.11 -->
               <div
                 class="bg-discord-gray-800 p-4 rounded-xl border border-discord-gray-700 shadow-xl overflow-hidden relative"
               >
@@ -3953,13 +4016,13 @@
                   onerror="this.src = '/images/default_avatar.png'"
                 />
                 <h3 class="text-3xl font-bold text-white z-10 tracking-tight">
-                  Zylo <span class="text-gradient-primary">Beta-0.5.11</span>
+                  Zylo <span class="text-gradient-primary">Beta-0.5.12</span>
                 </h3>
                 <p class="text-discord-gray-300 font-medium z-10 text-lg">
                   Created by D4niel-dev
                 </p>
                 <p class="text-discord-gray-400 text-sm mt-3 z-10">
-                  © 2025 Zylo. All rights reserved.
+                  © 2026 Zylo. All rights reserved.
                 </p>
               </div>
 
@@ -3987,14 +4050,14 @@
                       <span class="text-discord-gray-400">Build</span>
                       <span
                         class="font-medium text-white bg-white/5 px-2 py-0.5 rounded"
-                        >1.5.1-stable</span
+                        >beta-0.5.12-stable</span
                       >
                     </li>
                     <li
                       class="flex justify-between items-center border-b border-white/5 pb-2"
                     >
                       <span class="text-discord-gray-400">Release Date</span>
-                      <span class="font-medium text-white">August 2025</span>
+                      <span class="font-medium text-white">March 2026</span>
                     </li>
                     <li
                       class="flex justify-between items-center border-b border-white/5 pb-2"
@@ -4921,32 +4984,15 @@
                   >
                     Change Password
                   </div>
-                  <div class="grid sm:grid-cols-3 gap-4">
-                    <input
-                      type="password"
-                      id="oldPassword"
-                      placeholder="Current password"
-                      class="w-full p-3 rounded-xl border border-white/10 bg-black/40 text-white placeholder-discord-gray-500 focus:border-discord-blurple outline-none transition-colors"
-                    />
-                    <input
-                      type="password"
-                      id="newPassword"
-                      placeholder="New password"
-                      class="w-full p-3 rounded-xl border border-white/10 bg-black/40 text-white placeholder-discord-gray-500 focus:border-discord-blurple outline-none transition-colors"
-                    />
-                    <input
-                      type="password"
-                      id="confirmPassword"
-                      placeholder="Confirm new password"
-                      class="w-full p-3 rounded-xl border border-white/10 bg-black/40 text-white placeholder-discord-gray-500 focus:border-discord-blurple outline-none transition-colors"
-                    />
-                  </div>
+                  <p class="text-sm text-discord-gray-400 mb-4">
+                    Change your account password. This requires a multi-step verification process to ensure your security.
+                  </p>
                   <div class="flex">
                     <button
-                      onclick="updatePassword()"
-                      class="premium-btn w-full sm:w-auto mt-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-lg shadow-green-500/20 text-white rounded-xl font-semibold"
+                      onclick="startSecureWizard('changePassword')"
+                      class="premium-btn w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-discord-blurple to-indigo-600 hover:from-indigo-600 hover:to-purple-700 shadow-lg shadow-discord-blurple/20 text-white rounded-xl font-semibold transition-all transform hover:scale-105 active:scale-95"
                     >
-                      Change Password
+                      Start Password Change
                     </button>
                   </div>
                 </div>
@@ -4959,12 +5005,12 @@
                     <div>
                       <h4 class="text-red-400 font-bold mb-1">Danger Zone</h4>
                       <p class="text-sm text-discord-gray-400">
-                        Permanently delete your account and all associated data.
+                        Permanently delete your account and all associated data. You will be required to verify your identity.
                       </p>
                     </div>
                     <button
-                      onclick="deleteAccount()"
-                      class="premium-btn shrink-0 px-6 py-3 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 shadow-lg shadow-red-500/20 rounded-xl text-white font-bold"
+                      onclick="startSecureWizard('deleteAccount')"
+                      class="premium-btn shrink-0 px-6 py-3 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 shadow-lg shadow-red-500/20 rounded-xl text-white font-bold transition-all transform hover:scale-105 active:scale-95"
                       data-i18n="settings.deleteAccount"
                     >
                       Delete Account
@@ -5744,14 +5790,12 @@
     ></div>
     <div
       id="userViewModal"
-      class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[230] w-[90%] max-w-sm rounded-xl shadow-2xl hidden animate-pop"
+      class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[230] w-[90%] max-w-[340px] rounded-[8px] shadow-2xl hidden animate-pop drop-shadow-2xl"
     >
       <div
-        class="bg-discord-gray-800 text-discord-gray-300 flex flex-col rounded-xl"
+        class="bg-[#232428] text-[#dbdee1] flex flex-col rounded-[8px] overflow-hidden border border-black/30"
       >
-        <div
-          class="h-24 bg-discord-blurple relative rounded-t-xl overflow-hidden"
-        >
+        <div class="h-[120px] bg-discord-blurple relative w-full">
           <img
             id="uvBanner"
             src="/images/default_banner.png"
@@ -5759,64 +5803,73 @@
           />
           <button
             onclick="closeUserViewModal()"
-            class="absolute top-2 right-2 p-1 rounded-full bg-black/20 hover:bg-black/40 text-white transition"
+            class="absolute top-2 right-2 p-1.5 rounded-full bg-black/40 hover:bg-black/60 text-white transition-colors"
           >
             <i data-feather="x" class="w-4 h-4"></i>
           </button>
         </div>
         <div class="px-4 pb-4 relative">
-          <div class="relative -mt-12 mb-3">
-            <img
-              id="uvAvatar"
-              src="/images/default_avatar.png"
-              class="w-20 h-20 rounded-full border-4 border-discord-gray-800 bg-discord-gray-800 object-cover shadow-lg"
-            />
-            <div
-              id="uvStatus"
-              class="absolute bottom-1 right-1 w-5 h-5 rounded-full border-4 border-discord-gray-800 bg-gray-500"
-            ></div>
+          <!-- Avatar container positioned over banner -->
+          <div class="absolute -top-[52px] left-3.5 rounded-full bg-[#232428] p-1.5 pointer-events-none">
+            <div class="relative">
+              <img
+                id="uvAvatar"
+                src="/images/default_avatar.png"
+                class="w-[84px] h-[84px] rounded-full bg-[#111214] object-cover pointer-events-auto shadow-sm"
+              />
+              <div
+                id="uvStatus"
+                class="absolute bottom-0 right-0 w-[18px] h-[18px] rounded-full border-[3px] border-[#232428] bg-gray-500 drop-shadow-sm box-content"
+              ></div>
+            </div>
           </div>
-          <div class="space-y-1">
-            <h3 id="uvUsername" class="text-xl font-bold text-white">
+          
+          <!-- Spacing to push content down below the absolute avatar -->
+          <div class="h-[52px]"></div>
+          
+          <div class="mt-1 space-y-0.5">
+            <h3 id="uvUsername" class="text-[20px] font-bold text-[#f2f3f5] tracking-wide leading-none">
               Username
             </h3>
-            <p id="uvUsertag" class="text-discord-gray-400 text-sm font-medium">
+            <p id="uvUsertag" class="text-[#dbdee1] text-[14px] font-semibold tracking-wide leading-tight">
               @usertag
             </p>
-            <div id="uvBadges" class="flex gap-1.5 flex-wrap mt-2"></div>
+            <div id="uvBadges" class="flex gap-1.5 flex-wrap pt-2 empty:hidden"></div>
           </div>
-          <div class="mt-4 pt-4 border-t border-discord-gray-700">
-            <h4 class="text-xs font-bold text-discord-gray-400 uppercase mb-2">
+          
+          <div class="mt-3.5 bg-[#111214] rounded-[8px] p-3 shadow-inner">
+            <h4 class="text-[12px] font-bold text-[#b5bac1] uppercase mb-1.5 tracking-wider">
               About Me
             </h4>
             <p
               id="uvBio"
-              class="text-sm text-discord-gray-200 line-clamp-3 italic"
+              class="text-[14px] text-[#dbdee1] whitespace-pre-wrap leading-snug font-medium"
             >
               No bio shared.
             </p>
           </div>
-          <div class="mt-4 flex gap-2">
+          
+          <div class="mt-3.5 flex gap-2">
             <button
               id="uvMessageBtn"
-              class="flex-1 py-2 rounded bg-discord-blurple hover:bg-opacity-90 text-white text-sm font-bold transition"
+              class="flex-1 py-[10px] rounded hover:bg-indigo-600 bg-discord-blurple text-white text-[14px] font-semibold transition-colors shadow-sm"
             >
               Message
             </button>
             <button
               id="uvProfileBtn"
-              class="px-3 py-2 rounded bg-discord-gray-700 hover:bg-discord-gray-600 transition"
+              class="px-4 py-[10px] rounded bg-[#4e5058] hover:bg-[#6d6f78] text-white transition-colors shadow-sm flex items-center justify-center"
               title="View Full Profile"
             >
-              <i data-feather="user" class="w-4 h-4"></i>
+              <i data-feather="user" class="w-[18px] h-[18px]"></i>
             </button>
             <button
               id="uvQRBtn"
               onclick="showQRCode()"
-              class="px-3 py-2 rounded bg-discord-gray-700 hover:bg-discord-gray-600 transition"
+              class="px-4 py-[10px] rounded bg-[#4e5058] hover:bg-[#6d6f78] text-white transition-colors shadow-sm flex items-center justify-center"
               title="Share via QR Code"
             >
-              <i data-feather="maximize" class="w-4 h-4"></i>
+              <i data-feather="maximize" class="w-[18px] h-[18px]"></i>
             </button>
           </div>
         </div>
@@ -6302,7 +6355,7 @@
     <script src="files/js/socket.js"></script>
     <script src="files/js/chat.js"></script>
     <script src="files/js/groups.js?v=3"></script>
-    <script src="files/js/friends.js"></script>
+    <script src="files/js/friends.js?v=2"></script>
     <script src="files/js/cloud.js"></script>
     <script src="files/js/moments.js"></script>
     <script src="files/js/effects.js"></script>
@@ -9609,37 +9662,253 @@
         }
       }
 
-      async function updatePassword() {
-        const oldPass = document.getElementById("oldPassword").value;
-        const newPass = document.getElementById("newPassword").value;
-        const confirmPass = document.getElementById("confirmPassword").value;
-        const username = localStorage.getItem("username");
-        if (!oldPass || !newPass || !confirmPass)
-          return alert("Fill out all password fields.");
-        if (newPass !== confirmPass)
-          return alert("New passwords do not match.");
+      // Secure Wizard State
+      let secureWizardState = {
+        action: null, // 'changePassword' | 'deleteAccount'
+        step: 1,
+        maxSteps: 5,
+        uses2FA: false,
+        username: "",
+        password: "",
+        reason: "",
+        newPassword: "",
+      };
 
-        try {
-          const res = await fetch("/api/update-password", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              username,
-              oldPassword: oldPass,
-              newPassword: newPass,
-            }),
-          });
+      function openSecureWizardModal() {
+        const modal = document.getElementById("secureWizardModal");
+        const container = document.getElementById("secureWizardContainer");
+        modal.classList.remove("hidden");
+        // small delay for animation
+        setTimeout(() => {
+          modal.classList.remove("opacity-0");
+          container.classList.remove("scale-95");
+          container.classList.add("scale-100");
+        }, 10);
+      }
 
-          const data = await res.json();
-          if (!res.ok || !data.success) throw new Error(data.error || "Failed");
-          alert("Password updated successfully.");
+      function closeSecureWizardModal() {
+        const modal = document.getElementById("secureWizardModal");
+        const container = document.getElementById("secureWizardContainer");
+        modal.classList.add("opacity-0");
+        container.classList.remove("scale-100");
+        container.classList.add("scale-95");
+        setTimeout(() => {
+          modal.classList.add("hidden");
+        }, 300);
+      }
 
-          document.getElementById("oldPassword").value = "";
-          document.getElementById("newPassword").value = "";
-          document.getElementById("confirmPassword").value = "";
-        } catch (e) {
-          alert("Failed to update password: " + (e.message || "Unknown error"));
+      function startSecureWizard(action) {
+        secureWizardState = {
+          action: action,
+          step: 1,
+          uses2FA: localStorage.getItem("twoFactorEnabled") === "true",
+          maxSteps: localStorage.getItem("twoFactorEnabled") === "true" ? 5 : 4,
+          username: localStorage.getItem("username") || "",
+          password: "",
+          reason: "",
+          newPassword: "",
+        };
+
+        // Reset UI
+        document.getElementById("sw-username").value = secureWizardState.username;
+        document.getElementById("sw-password").value = "";
+        document.getElementById("sw-reason").value = "";
+        document.getElementById("sw-reason-other").value = "";
+        document.getElementById("sw-reason-other-container").classList.add("hidden");
+        document.getElementById("sw-2fa").value = "";
+        document.getElementById("sw-newpass").value = "";
+        document.getElementById("sw-confirmpass").value = "";
+
+        const title = action === "changePassword" ? "Change Password" : "Delete Account";
+        document.getElementById("sw-title").innerHTML = `<i data-feather="shield" class="text-discord-blurple"></i> ${title}`;
+        if (typeof feather !== "undefined") feather.replace();
+
+        showSecureWizardStep(1);
+        openSecureWizardModal();
+      }
+
+      function showSecureWizardStep(step) {
+        secureWizardState.step = step;
+        const totalSteps = secureWizardState.maxSteps;
+        
+        // Update dots
+        const dotsContainer = document.getElementById("sw-dots");
+        dotsContainer.innerHTML = "";
+        for(let i = 1; i <= totalSteps; i++) {
+          const dot = document.createElement("div");
+          dot.className = `w-2 h-2 rounded-full transition-colors ${i === step ? "bg-discord-blurple scale-125" : i < step ? "bg-green-500" : "bg-discord-gray-600"}`;
+          dotsContainer.appendChild(dot);
         }
+
+        // Hide all steps, show current
+        document.querySelectorAll(".sw-step-pane").forEach(pane => pane.classList.add("hidden"));
+        
+        // Map logical step to actual step pane
+        let displayStepId = `sw-step-${step}`;
+        
+        // If 2FA is off, Step 4 is skipped. 
+        // Real Step Map: 1:Username, 2:Password, 3:Reason, 4:2FA (optional), 5:Final.
+        if (!secureWizardState.uses2FA && step === 4) {
+             displayStepId = "sw-step-5"; // Skip 2FA pane, jump to final
+             document.getElementById("sw-step-text").innerText = `Step ${step} of 4`;
+        } else {
+             document.getElementById("sw-step-text").innerText = `Step ${step} of ${totalSteps}`;
+        }
+        
+        const pane = document.getElementById(displayStepId);
+        if (pane) {
+           pane.classList.remove("hidden");
+           // animation focus
+           pane.classList.add("animate-fadeIn");
+        }
+
+        // Action-specific UI changes for the final step
+        if (displayStepId === "sw-step-5") {
+            if (secureWizardState.action === "changePassword") {
+                document.getElementById("sw-final-changepass").classList.remove("hidden");
+                document.getElementById("sw-final-delete").classList.add("hidden");
+                document.getElementById("sw-next-btn").innerText = "Change Password";
+                document.getElementById("sw-next-btn").className = "premium-btn px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-semibold w-full hover:from-green-600 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed";
+            } else {
+                document.getElementById("sw-final-changepass").classList.add("hidden");
+                document.getElementById("sw-final-delete").classList.remove("hidden");
+                document.getElementById("sw-next-btn").innerText = "Delete Account";
+                document.getElementById("sw-next-btn").className = "premium-btn px-4 py-2 bg-gradient-to-r from-red-500 to-rose-600 text-white rounded-lg font-semibold w-full hover:from-red-600 hover:to-rose-700 disabled:opacity-50 disabled:cursor-not-allowed";
+            }
+        } else {
+            document.getElementById("sw-next-btn").innerText = "Next";
+            document.getElementById("sw-next-btn").className = "premium-btn px-4 py-2 bg-discord-blurple hover:bg-indigo-600 text-white rounded-lg font-semibold w-full disabled:opacity-50 disabled:cursor-not-allowed transition-all";
+        }
+        
+        // Adjust Back button
+        const backBtn = document.getElementById("sw-back-btn");
+        if (step === 1) {
+            backBtn.classList.add("invisible");
+        } else {
+            backBtn.classList.remove("invisible");
+        }
+      }
+
+      function swHandleReasonChange(val) {
+          if(val === "other") {
+              document.getElementById("sw-reason-other-container").classList.remove("hidden");
+          } else {
+              document.getElementById("sw-reason-other-container").classList.add("hidden");
+          }
+      }
+
+      async function secureWizardNextBtn() {
+          const btn = document.getElementById("sw-next-btn");
+          const ogText = btn.innerText;
+          btn.disabled = true;
+          btn.innerText = "Processing...";
+          const step = secureWizardState.step;
+          
+          try {
+              if (step === 1) {
+                  // Validate Username
+                  const inputUser = document.getElementById("sw-username").value.trim();
+                  if (inputUser !== localStorage.getItem("username")) {
+                      throw new Error("Username does not match logged-in user.");
+                  }
+                  showSecureWizardStep(2);
+              } 
+              else if (step === 2) {
+                  // Validate Password via Backend
+                  const inputPass = document.getElementById("sw-password").value;
+                  if (!inputPass) throw new Error("Please enter your current password.");
+                  
+                  const res = await fetch("/api/verify-password", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ username: secureWizardState.username, password: inputPass })
+                  });
+                  const data = await res.json();
+                  if (!res.ok || !data.success) throw new Error(data.error || "Incorrect password.");
+                  
+                  secureWizardState.password = inputPass;
+                  showSecureWizardStep(3);
+              }
+              else if (step === 3) {
+                  const selReason = document.getElementById("sw-reason").value;
+                  if (!selReason) throw new Error("Please select a reason.");
+                  if (selReason === "other") {
+                      const otherTxt = document.getElementById("sw-reason-other").value.trim();
+                      if(!otherTxt) throw new Error("Please specify your reason.");
+                      secureWizardState.reason = "Other: " + otherTxt;
+                  } else {
+                      secureWizardState.reason = selReason;
+                  }
+                  showSecureWizardStep(4);
+              }
+              else if (step === 4 && secureWizardState.uses2FA) {
+                  // Verify 2FA
+                  const code = document.getElementById("sw-2fa").value.trim();
+                  if(!code || code.length !== 6) throw new Error("Please enter a valid 6-digit code.");
+                  
+                  const res = await fetch("/api/auth/2fa/verify", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ username: secureWizardState.username, token: code })
+                  });
+                  const data = await res.json();
+                  if (!res.ok || !data.success) throw new Error(data.error || "Invalid 2FA code.");
+                  showSecureWizardStep(5);
+              }
+              else if (step === secureWizardState.maxSteps) { // Final Step
+                  if (secureWizardState.action === "changePassword") {
+                      const np = document.getElementById("sw-newpass").value;
+                      const cp = document.getElementById("sw-confirmpass").value;
+                      if (!np || !cp) throw new Error("Please fill out both password fields.");
+                      if (np === secureWizardState.password) throw new Error("New password must be different.");
+                      if (np !== cp) throw new Error("New passwords do not match.");
+                      
+                      const res = await fetch("/api/update-password", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                             username: secureWizardState.username,
+                             oldPassword: secureWizardState.password,
+                             newPassword: np,
+                             reason: secureWizardState.reason
+                          })
+                      });
+                      const data = await res.json();
+                      if (!res.ok || !data.success) throw new Error(data.error || "Failed");
+                      
+                      alert("Password changed successfully!");
+                      closeSecureWizardModal();
+                  } 
+                  else if (secureWizardState.action === "deleteAccount") {
+                      const res = await fetch("/api/delete-account", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                              username: secureWizardState.username,
+                              password: secureWizardState.password,
+                              reason: secureWizardState.reason
+                          })
+                      });
+                      const data = await res.json();
+                      if (!res.ok || !data.success) throw new Error(data.error || "Failed");
+                      
+                      alert("Account deleted securely. We're sorry to see you go.");
+                      localStorage.clear();
+                      window.location.href = "/login.html";
+                  }
+              }
+          } catch(e) {
+              alert(e.message);
+          } finally {
+              btn.disabled = false;
+              btn.innerText = ogText;
+          }
+      }
+
+      function secureWizardBackBtn() {
+          if(secureWizardState.step > 1) {
+              showSecureWizardStep(secureWizardState.step - 1);
+          }
       }
 
       // Two-factor authentication toggle
@@ -9720,29 +9989,8 @@
         });
       }
 
-      async function deleteAccount() {
-        if (
-          !confirm(
-            "Are you sure you want to delete your account?\nThis action cannot be undone.",
-          )
-        )
-          return;
-        const username = localStorage.getItem("username");
-        try {
-          const res = await fetch("/api/delete-account", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username }),
-          });
+      // End of Secure Wizard Logic
 
-          const data = await res.json();
-          if (!res.ok || !data.success) throw new Error(data.error || "Failed");
-          localStorage.clear(); // Clear local data and go to login
-          window.location.href = "/login.html";
-        } catch (e) {
-          alert("Failed to delete account: " + (e.message || "Unknown error"));
-        }
-      }
 
       /// About Settings
       function populateAboutInfo() {
@@ -9900,6 +10148,25 @@
                     </div>
                     <div class="p-6 overflow-y-auto max-h-[60vh] text-sm text-discord-gray-300 space-y-4">
                         <div class="bg-discord-gray-900/50 p-4 rounded-lg border border-discord-gray-700">
+                            <h3 class="font-bold text-white text-base mb-2">Zylo-Beta-0.5.12 — The Security & Polish Update</h3>
+                            <h4 class="font-semibold text-emerald-400 mt-2 mb-1">NEW :</h4>
+                            <ul class="list-disc list-inside space-y-1 mb-3">
+                                <li><strong>Security Wizard</strong>: Secure, multi-step 2FA modal for changing passwords and deleting accounts.</li>
+                                <li><strong>Service Worker (v5)</strong>: Reliable caching with network-first strategies and instant update reloading.</li>
+                            </ul>
+                            <h4 class="font-semibold text-blue-400 mt-2 mb-1">IMPROVEMENT :</h4>
+                            <ul class="list-disc list-inside space-y-1 mb-3">
+                                <li><strong>Friends & DM UI</strong>: A modern Discord-like overhaul with clean pill layouts and slick hover interactions.</li>
+                                <li><strong>Profile Card Overhaul</strong>: Redesigned the User Preview Modal with overlapping avatars and cleaner data structure.</li>
+                                <li><strong>Mobile Polish</strong>: Added a dedicated group sidebar close button and fixed frustrating image gaps in mobile chats.</li>
+                            </ul>
+                            <h4 class="font-semibold text-red-400 mt-2 mb-1">FIX :</h4>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>Sync Stability</strong>: The Media Gallery and Message Pinning features now sync perfectly with the backend live sockets.</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-discord-gray-900/50 p-4 rounded-lg border border-discord-gray-700">
                             <h3 class="font-bold text-white text-base mb-2">Zylo-Beta-0.5.11 — The Specialized Modes Update</h3>
                             <h4 class="font-semibold text-emerald-400 mt-2 mb-1">NEW :</h4>
                             <ul class="list-disc list-inside space-y-1 mb-3">
@@ -9934,7 +10201,7 @@
                         </div>
                         
                         <div class="bg-discord-gray-900/50 p-4 rounded-lg border text-center border-discord-gray-700 mb-2">
-                             <a href="https://github.com/D4niel-dev/Zylo-Beta-1.5.1/blob/main/CHANGELOGS.md" target="_blank" class="text-discord-blurple hover:text-white transition"><i>View full historical changelog on GitHub...</i></a>
+                             <a href="https://github.com/D4niel-dev/Zylo-Beta-1.x.x/blob/main/CHANGELOGS.md" target="_blank" class="text-discord-blurple hover:text-white transition"><i>View full historical changelog on GitHub...</i></a>
                         </div>
                     </div>
                 </div>
@@ -13748,18 +14015,20 @@
           let contentEl = null;
 
           if (
-            item.fileData &&
-            (item.type === "image" || item.fileType?.startsWith("image/"))
+            (item.url || item.fileData) &&
+            (item.type === "image" || item.fileType?.startsWith("image") || item.fileType === "image")
           ) {
-            // Image
+            // Image (supports both legacy fileData and new url format)
             contentEl = document.createElement("img");
-            contentEl.src = item.fileData.startsWith("http")
-              ? item.fileData
-              : item.fileData.startsWith("data:")
+            if (item.url) {
+              contentEl.src = item.url;
+            } else if (item.fileData) {
+              contentEl.src = item.fileData.startsWith("http")
                 ? item.fileData
-                : "/uploads/" + item.fileName; // Fallback logic
-            // Better url handling if needed
-            if (item.url) contentEl.src = item.url;
+                : item.fileData.startsWith("data:")
+                  ? item.fileData
+                  : "/uploads/" + item.fileName;
+            }
             contentEl.className =
               "w-full h-full object-cover transition transform group-hover:scale-110";
             wrapper.onclick = () => openLightbox(contentEl.src, "image");
@@ -14224,6 +14493,105 @@
           class="space-y-2 max-h-[60vh] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-discord-gray-900"
         >
           <!-- populated via JS -->
+        </div>
+      </div>
+    </div>
+    <!-- Secure Action Wizard Modal -->
+    <div id="secureWizardModal" class="fixed inset-0 bg-black/60 hidden z-[100] flex items-center justify-center backdrop-blur-md transition-all duration-300 opacity-0">
+      <div id="secureWizardContainer" class="bg-discord-gray-800 rounded-2xl w-full max-w-sm p-6 shadow-2xl border border-discord-gray-700 mx-4 transform transition-all duration-300 scale-95 origin-center">
+        <!-- Header -->
+        <div class="flex flex-col mb-6">
+           <div class="flex justify-between items-center w-full">
+              <h3 id="sw-title" class="text-white font-bold text-xl flex items-center gap-2">
+                <i data-feather=" shield" class="text-discord-blurple"></i> Action
+              </h3>
+              <button onclick="closeSecureWizardModal()" class="text-discord-gray-400 hover:text-white transition-colors p-1 rounded-md hover:bg-white/10">
+                <i data-feather="x"></i>
+              </button>
+           </div>
+           <div class="flex justify-between items-center w-full mt-3">
+              <span id="sw-step-text" class="text-xs text-discord-gray-400 uppercase font-semibold tracking-wider">Step 1 of 5</span>
+              <div id="sw-dots" class="flex gap-1.5">
+                <!-- Dots injected via JS -->
+              </div>
+           </div>
+        </div>
+
+        <!-- Body / Panes -->
+        <div class="relative min-h-[150px]">
+           <!-- Step 1: Username -->
+           <div id="sw-step-1" class="sw-step-pane absolute w-full top-0 left-0 hidden">
+               <label class="block text-discord-gray-300 text-sm font-semibold mb-2 uppercase tracking-wide">Confirm Your Username</label>
+               <input type="text" id="sw-username" class="w-full p-3 rounded-xl border border-white/10 bg-black/40 text-white focus:border-discord-blurple outline-none transition-colors" placeholder="Username" readonly>
+               <p class="text-xs text-discord-gray-400 mt-2"><i data-feather="info" class="w-3 h-3 inline"></i> This must match your currently logged-in account.</p>
+           </div>
+
+           <!-- Step 2: Password -->
+           <div id="sw-step-2" class="sw-step-pane absolute w-full top-0 left-0 hidden">
+               <label class="block text-discord-gray-300 text-sm font-semibold mb-2 uppercase tracking-wide">Current Password</label>
+               <input type="password" id="sw-password" class="w-full p-3 rounded-xl border border-white/10 bg-black/40 text-white focus:border-discord-blurple outline-none transition-colors" placeholder="••••••••">
+               <p class="text-xs text-discord-gray-400 mt-2">Enter your current password to continue.</p>
+           </div>
+
+           <!-- Step 3: Reason -->
+           <div id="sw-step-3" class="sw-step-pane absolute w-full top-0 left-0 hidden">
+               <label class="block text-discord-gray-300 text-sm font-semibold mb-2 uppercase tracking-wide">Why are you doing this?</label>
+               <select id="sw-reason" onchange="swHandleReasonChange(this.value)" class="w-full p-3 rounded-xl border border-white/10 bg-[#1e1f22] text-white focus:border-discord-blurple outline-none transition-colors mb-3">
+                   <option value="" disabled selected>Select a reason...</option>
+                   <option value="security">Security concerns (Account compromised)</option>
+                   <option value="forgot">General maintenance / Changing routine</option>
+                   <option value="not_using">Not using the platform anymore</option>
+                   <option value="privacy">Privacy concerns</option>
+                   <option value="missing_features">Missing features</option>
+                   <option value="other">Other (Specify)</option>
+               </select>
+               <div id="sw-reason-other-container" class="hidden">
+                  <input type="text" id="sw-reason-other" class="w-full p-3 rounded-xl border border-white/10 bg-black/40 text-white focus:border-discord-blurple outline-none transition-colors text-sm" placeholder="Please specify...">
+               </div>
+           </div>
+
+           <!-- Step 4: 2FA -->
+           <div id="sw-step-4" class="sw-step-pane absolute w-full top-0 left-0 hidden">
+               <label class="block text-discord-gray-300 text-sm font-semibold mb-2 uppercase tracking-wide">Two-Factor Authentication</label>
+               <p class="text-xs text-discord-gray-400 mb-3">Your account is secured with 2FA. Please enter a validation code.</p>
+               <input type="text" id="sw-2fa" maxlength="6" class="w-full p-3 text-center tracking-[0.5em] text-xl rounded-xl border border-white/10 bg-black/40 text-white focus:border-discord-blurple outline-none transition-colors font-mono placeholder:tracking-normal" placeholder="000000">
+           </div>
+
+           <!-- Step 5: Final -->
+           <div id="sw-step-5" class="sw-step-pane absolute w-full top-0 left-0 hidden">
+               <!-- Change Password Variant -->
+               <div id="sw-final-changepass" class="hidden space-y-3">
+                   <label class="block text-discord-gray-300 text-sm font-semibold uppercase tracking-wide">New Password</label>
+                   <input type="password" id="sw-newpass" class="w-full p-3 rounded-xl border border-white/10 bg-black/40 text-white focus:border-discord-blurple outline-none transition-colors" placeholder="New Password">
+                   
+                   <label class="block text-discord-gray-300 text-sm font-semibold uppercase tracking-wide mt-2">Confirm New Password</label>
+                   <input type="password" id="sw-confirmpass" class="w-full p-3 rounded-xl border border-white/10 bg-black/40 text-white focus:border-discord-blurple outline-none transition-colors" placeholder="Confirm Password">
+               </div>
+               
+               <!-- Delete Account Variant -->
+               <div id="sw-final-delete" class="hidden">
+                  <div class="p-4 bg-red-500/10 border border-red-500/30 rounded-xl flex items-start gap-3">
+                     <i data-feather="alert-triangle" class="text-red-500 shrink-0 mt-0.5"></i>
+                     <div>
+                        <h4 class="text-red-400 font-bold mb-1">Final Warning</h4>
+                        <p class="text-sm text-discord-gray-300">You are about to irreversibly delete this account. All data will be lost immediately.</p>
+                     </div>
+                  </div>
+                  <p class="text-center text-sm font-semibold text-white mt-4">Confirm deletion?</p>
+               </div>
+           </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="flex justify-between items-center mt-6 pt-4 border-t border-discord-gray-700">
+            <button id="sw-back-btn" onclick="secureWizardBackBtn()" class="text-discord-gray-400 hover:text-white text-sm font-semibold transition-colors invisible px-2 py-2">
+                Back
+            </button>
+            <div class="flex-grow max-w-[140px]">
+                <button id="sw-next-btn" onclick="secureWizardNextBtn()" class="premium-btn px-4 py-2 bg-discord-blurple hover:bg-indigo-600 text-white rounded-lg font-semibold w-full transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                    Next
+                </button>
+            </div>
         </div>
       </div>
     </div>

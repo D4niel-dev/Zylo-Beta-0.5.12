@@ -11,7 +11,7 @@
 <div align="center">
   
 ![Status](https://img.shields.io/badge/Status-beta-blue)
-![Build](https://img.shields.io/badge/Build-1.5.1-blue)
+![Build](https://img.shields.io/badge/Build-beta--0.5.12-blue)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Web%20%7C%20Mobile-lightgrey)
@@ -29,7 +29,7 @@ utilities, and AI assistance into a single unified workspace.
 
 - **💬 Real-time Communication**: High-speed group chats and Direct Messages with low-latency delivery.
 - **🛡️ Secure Workspace**: Privacy-focused architecture with local data storage and encrypted session handling.
-- **☁️ My Cloud**: Integrated 500MB personal cloud storage for files, documents, and media.
+- **☁️ My Cloud**: Integrated 10GB personal cloud storage for files, documents, and media.
 - **📖 Moments**: Share your life's highlights with a dedicated social feed for you and your friends.
 - **🤖 AI Integration**: Built-in AI Chat assistant with multiple personas and models (via Gemini).
 - **🛠️ Power Tools**: Built-in utilities like a scientific calculator, speed test, and quick notes.
@@ -80,11 +80,11 @@ Zylo is optimized for mobile via Pydroid 3/Pyramid.
 
 ## 🗺️ Roadmap
 
-- **🔒 End-to-End Encryption**: Implementing E2EE for private Direct Messages.
+- **🔒 End-to-End Encryption**: Implementing E2EE for private Group channels.
 - **📞 Voice & Video Calls**: Native WebRTC integration for high-quality calls.
-- **📦 Plugin System**: Allow developers to create custom widgets and bots.
-- **📱 iOS/Android Native**: Transitioning from Pydroid/Pyramid to a dedicated mobile app.
-- **🤖 Real-time AI Chats**: Allow users to chat with a AI, but with multi-personals.
+- **📦 Plugin System**: Allow developers to create custom widgets, themes, and bots.
+- **📱 iOS/Android Native**: Transitioning from Pydroid/Pyramid to a dedicated mobile app framework.
+- **🤖 Expanded AI Capabilities**: Allowing AI to analyze media elements, images, and audio in chats.
 
 ## 🛡️ Security & Privacy
 

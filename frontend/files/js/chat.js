@@ -433,7 +433,7 @@ async function createDiscordMessage(data) {
         const img = document.createElement("img");
         img.src = data.sticker_src;
         img.alt = "Sticker";
-        img.className = "sticker-img w-32 h-32 object-contain";
+        img.className = "block sticker-img w-32 h-32 object-contain";
         body.appendChild(img);
         contentWrapper.appendChild(body);
     } else if (data.message && data.message.match(/^\[sticker:(.+)\]$/)) {
@@ -451,7 +451,7 @@ async function createDiscordMessage(data) {
             const img = document.createElement("img");
             img.src = src;
             img.alt = "Sticker";
-            img.className = "sticker-img w-32 h-32 object-contain";
+            img.className = "block sticker-img w-32 h-32 object-contain";
             body.appendChild(img);
             contentWrapper.appendChild(body);
         } else {
@@ -620,7 +620,7 @@ async function createDiscordMessage(data) {
             if (att.fileType === 'image') {
                 const img = document.createElement('img');
                 img.src = att.url;
-                img.className = 'max-w-xs max-h-60 rounded-lg cursor-pointer hover:opacity-90 transition shadow-sm border border-black/20';
+                img.className = 'block max-w-[85vw] sm:max-w-xs max-h-60 object-contain rounded-lg cursor-pointer hover:opacity-90 transition shadow-sm border border-black/20';
                 img.onclick = () => window.openImageViewer(att.url);
                 attContainer.appendChild(img);
             } else {

@@ -37,7 +37,7 @@ function renderFriendsDashboard() {
     // Helper to create row
     const createRow = (username, subtext, actions) => {
         const div = document.createElement('div');
-        div.className = 'friend-row group';
+        div.className = 'group flex items-center justify-between px-3 py-2.5 mx-2 my-0.5 rounded-lg hover:bg-[#35373c]/60 transition-colors cursor-pointer border-t border-transparent hover:border-transparent';
 
         getUserAvatarUrl(username).then(url => {
             const img = div.querySelector('.row-avatar');
@@ -45,14 +45,14 @@ function renderFriendsDashboard() {
         });
 
         div.innerHTML = `
-              <div class="flex items-center gap-3" onclick="openDM('${username}')">
-                  <img src="/images/default_avatar.png" class="row-avatar w-10 h-10 rounded-full bg-discord-gray-700">
-                  <div>
-                      <div class="font-semibold text-white">${username}</div>
-                      <div class="text-xs text-discord-gray-400">${subtext}</div>
+              <div class="flex items-center gap-3 flex-1" onclick="openDM('${username}')">
+                  <img src="/images/default_avatar.png" class="row-avatar w-10 h-10 rounded-full bg-discord-gray-700 object-cover border border-black/20 shadow-sm relative z-10">
+                  <div class="flex flex-col justify-center">
+                      <div class="font-semibold text-discord-gray-100 text-[15px] leading-tight flex items-center">${username}</div>
+                      <div class="text-[13px] text-[#949ba4] font-medium leading-tight group-hover:text-[#dbdee1] transition-colors">${subtext}</div>
                   </div>
               </div>
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   ${actions}
               </div>
       `;
@@ -64,8 +64,8 @@ function renderFriendsDashboard() {
         // Note: We don't have real presence yet, assuming all friends are "Offline" visually for now or just listing them
         (friendsState.friends || []).forEach(f => {
             const actions = `
-          <button class="action-icon-btn" onclick="openDM('${f}')" title="Message"><i data-feather="message-circle" class="w-4 h-4"></i></button>
-          <button class="action-icon-btn danger" onclick="removeFriend('${f}')" title="Remove"><i data-feather="trash-2" class="w-4 h-4"></i></button>
+          <button class="bg-[#2b2d31] hover:bg-[#1e1f22] text-[#b5bac1] hover:text-white p-2.5 rounded-full transition-colors flex items-center justify-center shadow-lg transform hover:scale-105" onclick="openDM('${f}')" title="Message"><i data-feather="message-circle" class="w-4 h-4"></i></button>
+          <button class="bg-[#2b2d31] hover:bg-rose-600 hover:text-white text-[#b5bac1] p-2.5 rounded-full transition-colors flex items-center justify-center shadow-lg transform hover:scale-105" onclick="removeFriend('${f}')" title="Remove"><i data-feather="trash-2" class="w-4 h-4"></i></button>
       `;
             container.appendChild(createRow(f, "Friend", actions));
         });
@@ -80,8 +80,8 @@ function renderFriendsDashboard() {
 
         (friendsState.incoming || []).forEach(f => {
             const actions = `
-          <button class="action-icon-btn success" onclick="acceptFriend('${f}')"><i data-feather="check" class="w-4 h-4"></i></button>
-          <button class="action-icon-btn danger" onclick="declineFriend('${f}')"><i data-feather="x" class="w-4 h-4"></i></button>
+          <button class="bg-[#2b2d31] hover:bg-emerald-600 hover:text-white text-emerald-400 p-2.5 rounded-full transition-colors flex items-center justify-center shadow-lg transform hover:scale-105" onclick="acceptFriend('${f}')" title="Accept"><i data-feather="check" class="w-4 h-4"></i></button>
+          <button class="bg-[#2b2d31] hover:bg-rose-600 hover:text-white text-rose-400 p-2.5 rounded-full transition-colors flex items-center justify-center shadow-lg transform hover:scale-105" onclick="declineFriend('${f}')" title="Decline"><i data-feather="x" class="w-4 h-4"></i></button>
       `;
             container.appendChild(createRow(f, "Incoming Friend Request", actions));
         });
@@ -93,7 +93,7 @@ function renderFriendsDashboard() {
 
         (friendsState.outgoing || []).forEach(f => {
             const actions = `
-          <button class="action-icon-btn danger" onclick="cancelFriendRequest('${f}')"><i data-feather="x" class="w-4 h-4"></i></button>
+          <button class="bg-[#2b2d31] hover:bg-rose-600 hover:text-white text-[#b5bac1] p-2.5 rounded-full transition-colors flex items-center justify-center shadow-lg transform hover:scale-105" onclick="cancelFriendRequest('${f}')" title="Cancel Request"><i data-feather="x" class="w-4 h-4"></i></button>
           `;
             container.appendChild(createRow(f, "Outgoing Friend Request", actions));
         });
@@ -198,13 +198,13 @@ function renderSidebarList() {
     saved.forEach(friend => {
         const btn = document.createElement('div');
         const isActive = window.activeFriendChat === friend;
-        btn.className = `sidebar-dm-item group flex items-center p-2 rounded cursor-pointer transition-colors mx-2 mb-0.5 ${isActive ? 'bg-discord-gray-600/50 text-white' : 'text-discord-gray-400 hover:bg-discord-gray-700/50 hover:text-discord-gray-200'}`;
+        btn.className = `sidebar-dm-item group flex items-center px-2 py-1.5 rounded-md cursor-pointer transition-colors mx-2 mb-0.5 ${isActive ? 'bg-[#35373c] text-white' : 'text-[#949ba4] hover:bg-[#35373c]/70 hover:text-[#dbdee1] active:text-white'}`;
         btn.dataset.username = friend;
         btn.onclick = () => openDM(friend);
 
         // Avatar Container
         const avatarContainer = document.createElement('div');
-        avatarContainer.className = "relative mr-3";
+        avatarContainer.className = "relative mr-3 shrink-0";
 
         const img = document.createElement('img');
         img.src = '/images/default_avatar.png';
@@ -231,8 +231,8 @@ function renderSidebarList() {
 
         // Delete button placeholder
         const delBtn = document.createElement('button');
-        delBtn.className = "hidden group-hover:block text-discord-gray-400 hover:text-white p-1";
-        delBtn.innerHTML = '<i data-feather="x" class="w-3 h-3"></i>';
+        delBtn.className = "hidden group-hover:flex items-center justify-center text-[#949ba4] hover:text-[#dbdee1] p-1 rounded-full hover:bg-black/20 transition-colors opacity-70 hover:opacity-100";
+        delBtn.innerHTML = '<i data-feather="x" class="w-3.5 h-3.5"></i>';
         delBtn.onclick = (e) => {
             e.stopPropagation();
             removeFriend(friend); // Use global removeFriend from friends.js
