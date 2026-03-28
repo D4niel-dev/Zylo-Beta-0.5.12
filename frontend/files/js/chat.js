@@ -271,16 +271,30 @@ async function createDiscordMessage(data) {
     const tUname = data.username || data.from;
 
     // Standard Avatar (only if not compact)
+    let avatarContainer = null;
     if (!data.compact) {
+        avatarContainer = document.createElement("div");
+        avatarContainer.className = "avatar-container relative flex-shrink-0 mt-0.5";
+
         const avatar = document.createElement("img");
         const fallbackAvatar = '/images/default_avatar.png';
         const avatarUrl = await getUserAvatarUrl(tUname);
         avatar.src = avatarUrl;
         avatar.alt = `${tUname}'s avatar`;
-        avatar.className = "w-11 h-11 min-w-[44px] rounded-full object-cover cursor-pointer shadow-sm mt-0.5 hover:opacity-80 transition-opacity";
+        avatar.className = "w-11 h-11 min-w-[44px] rounded-full object-cover cursor-pointer shadow-sm hover:opacity-80 transition-opacity avatar-img";
         avatar.onerror = function () { this.onerror = null; this.src = fallbackAvatar; };
         avatar.onclick = () => showUserProfile(tUname);
-        messageRow.appendChild(avatar);
+
+        const frameLayer = document.createElement("div");
+        frameLayer.className = "avatar-frame absolute inset-0 pointer-events-none rounded-full";
+
+        const effectLayer = document.createElement("div");
+        effectLayer.className = "avatar-effect absolute inset-0 pointer-events-none rounded-full";
+
+        avatarContainer.appendChild(avatar);
+        avatarContainer.appendChild(frameLayer);
+        avatarContainer.appendChild(effectLayer);
+        messageRow.appendChild(avatarContainer);
     }
 
     const contentWrapper = document.createElement("div");
@@ -313,11 +327,19 @@ async function createDiscordMessage(data) {
                     fetch(`/api/get-user?identifier=${encodeURIComponent(tUname)}`)
                         .then(r => r.json())
                         .then(d => {
-                            if (d.success && d.user && d.user.role) {
-                                avatarCache.set(tUname + '_role', d.user.role);
-                                const color = roleColorMap[d.user.role.toLowerCase()] || 'text-white';
-                                userSpan.className = `${color} font-semibold cursor-pointer hover:underline tracking-wide`;
-                                if (d.user.role !== 'user') userSpan.title = d.user.role.charAt(0).toUpperCase() + d.user.role.slice(1);
+                            if (d.success && d.user) {
+                                if (d.user.role) {
+                                    avatarCache.set(tUname + '_role', d.user.role);
+                                    const color = roleColorMap[d.user.role.toLowerCase()] || 'text-white';
+                                    userSpan.className = `${color} font-semibold cursor-pointer hover:underline tracking-wide`;
+                                    if (d.user.role !== 'user') userSpan.title = d.user.role.charAt(0).toUpperCase() + d.user.role.slice(1);
+                                }
+                                // Apply cosmetics to chat avatar
+                                if (avatarContainer && d.user.settings && window.applyAvatarCosmetics) {
+                                    const effect = d.user.settings.profileEffect || 'none';
+                                    const frame = d.user.settings.profileFrame || 'none';
+                                    window.applyAvatarCosmetics(avatarContainer, effect, frame);
+                                }
                             }
                         }).catch(() => { });
                 }
@@ -709,9 +731,31 @@ async function showUserProfile(targetUsername) {
             const u = data.user;
             document.getElementById('uvUsername').textContent = u.username;
             document.getElementById('uvUsertag').textContent = (u.usertag || '@user0000');
-            if (u.avatar) document.getElementById('uvAvatar').src = u.avatar;
-            if (u.banner) document.getElementById('uvBanner').src = u.banner;
+            if (u.avatar) document.getElementById('uvAvatar').src = u.avatar + '?t=' + Date.now();
+            if (u.banner) document.getElementById('uvBanner').src = u.banner + '?t=' + Date.now();
             document.getElementById('uvBio').textContent = u.about || u.aboutMe || 'No bio shared.';
+
+            // Always clear previous cosmetics first
+            const uvContainer = document.getElementById('uvAvatar')?.closest('.avatar-container');
+            const uvBanner = document.getElementById('uvBanner');
+            
+            if (uvContainer && window.applyAvatarCosmetics) {
+                window.applyAvatarCosmetics(uvContainer, 'none', 'none');
+            }
+            if (uvBanner && window.applyBannerCosmetics) {
+                window.applyBannerCosmetics(uvBanner, 'none');
+            }
+
+            // Apply specific user cosmetics if they have them
+            if (u.settings) {
+                if (uvContainer && window.applyAvatarCosmetics) {
+                    window.applyAvatarCosmetics(uvContainer, u.settings.profileEffect || 'none', u.settings.profileFrame || 'none');
+                }
+                
+                if (uvBanner && window.applyBannerCosmetics) {
+                    window.applyBannerCosmetics(uvBanner, u.settings.bannerEffect || 'none');
+                }
+            }
 
             // Render Badges
             if (window.renderBadges) {

@@ -1965,13 +1965,21 @@ def update_profile():
     def save_image(base64_data, filename):
         if not base64_data:
             return None
-        if isinstance(base64_data, str) and (   # If the value is already a URL/path, just keep it (no-op update)
-            base64_data.startswith('/uploads/') or
-            base64_data.startswith('/images/') or
-            base64_data.startswith('http://') or
-            base64_data.startswith('https://')
-        ):
-            return base64_data
+        if isinstance(base64_data, str):
+            # Normalize: strip full origin from http:// URLs to get relative path
+            # e.g. "http://192.168.1.181:5000/uploads/Dan/avatar.png?t=123" → "/uploads/Dan/avatar.png"
+            cleaned = base64_data
+            if cleaned.startswith('http://') or cleaned.startswith('https://'):
+                from urllib.parse import urlparse
+                parsed = urlparse(cleaned)
+                cleaned = parsed.path  # strips origin and query string
+
+            # Strip any ?t= cache-buster query params from relative paths too
+            if '?' in cleaned:
+                cleaned = cleaned.split('?')[0]
+
+            if cleaned.startswith('/uploads/') or cleaned.startswith('/images/'):
+                return cleaned  # already a valid relative URL, no need to re-save
         try:
             header, encoded = base64_data.split(",", 1)
             file_data = base64.b64decode(encoded)

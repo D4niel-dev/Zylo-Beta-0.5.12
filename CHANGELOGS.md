@@ -184,14 +184,20 @@
 - **Security Wizard**: Replaced inline account setting forms with a secure, multi-step 2FA authentication modal for changing passwords and deleting accounts.
 - **Service Worker (v5)**: Upgraded caching mechanisms with a network-first strategy and auto-reloading to ensure you always get the latest code.
 - **Backend Audit Logs**: Added server-side tracking and logic validation for sensitive operations.
+- **Advanced Theme Editor**: Redesigned the custom theme editor with a premium glassmorphism layout, circular color swatches, and a live preview panel. Gated behind Developer Mode toggle.
+- **Cosmetics — New PNG Frames**: Added 3 new avatar frames (Celestial Halo, Void Ring, Mystic Aura) using existing PNG assets.
+- **Cosmetics — Sidebar Frames**: Avatar frames and effects now render on both the expanded and collapsed sidebar profile cards.
 
 ### IMPROVEMENT :
 - **UI/UX Refinement**: Completely revamped the Friends and DM screens with modern hover effects, pill layouts, and dynamic action buttons.
 - **Profile Card**: Redesigned the User Preview Modal with an overlapping avatar, refined backgrounds, and a much cleaner structure.
 - **Mobile UX**: Added a dedicated mobile close button for the Groups sidebar to make mobile navigation smoother.
 - **Mobile Chat**: Improved message layout to eliminate awkward trailing blank spaces under images.
+- **Cosmetics — Frame Rendering**: Applied a CSS radial mask to PNG-based avatar frames so the avatar is always visible through the center, preventing frames from covering the profile picture.
+- **Cosmetics — Removed SVG Frames**: Cleaned up unused SVG frame assets (shield, crown, dragon) in favor of reliable PNG-based frames.
 
 ### FIX :
 - **Messaging Bug**: Fixed synchronization issues between frontend and backend when pinning messages.
 - **Media Gallery Bug**: Resolved an issue where newly sent images via live sockets were failing to register in the user's Media Gallery.
 - **Chat UI Bug**: Eliminated unwanted padding/spacing glitches floating at the top of the chat panel.
+- **Cosmetics Preview Clipping**: Fixed avatar frame clipping in the Cosmetics modal live preview by relocating `overflow-hidden` to the banner layer only.

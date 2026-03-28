@@ -7,6 +7,7 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
     <title>Zylo | Main Window</title>
+    <script src="/files/js/theme-hydration.js"></script>
     <link rel="icon" href="/images/zylo/Zylo_icon.ico" type="image/x-icon" />
     <link rel="manifest" href="/js/manifest.webmanifest" />
     <meta name="theme-color" content="#202225" />
@@ -31,14 +32,14 @@
           extend: {
             colors: {
               // Discord-like palette
-              "discord-gray-900": "#202225", // Server nav
-              "discord-gray-800": "#2f3136", // Channel list
-              "discord-gray-700": "#36393f", // Main content
-              "discord-gray-600": "#40444b", // Input / Active
-              "discord-gray-500": "#4f545c", // User panel
-              "discord-gray-400": "#b9bbbe", // Muted text
-              "discord-gray-300": "#dcddde", // Normal text
-              "discord-blurple": "#5865F2",
+              "discord-gray-900": "rgb(var(--color-discord-gray-900, 32 34 37) / <alpha-value>)", // Server nav
+              "discord-gray-800": "rgb(var(--color-discord-gray-800, 47 49 54) / <alpha-value>)", // Channel list
+              "discord-gray-700": "rgb(var(--color-discord-gray-700, 54 57 63) / <alpha-value>)", // Main content
+              "discord-gray-600": "rgb(var(--color-discord-gray-600, 64 68 75) / <alpha-value>)", // Input / Active
+              "discord-gray-500": "rgb(var(--color-discord-gray-500, 79 84 92) / <alpha-value>)", // User panel
+              "discord-gray-400": "rgb(var(--color-discord-gray-400, 185 187 190) / <alpha-value>)", // Muted text
+              "discord-gray-300": "rgb(var(--color-discord-gray-300, 220 221 222) / <alpha-value>)", // Normal text
+              "discord-blurple": "rgb(var(--color-discord-blurple, 88 101 242) / <alpha-value>)",
             },
             animation: {
               ringPulse: "ringPulse 4s infinite ease-in-out",
@@ -173,11 +174,15 @@
         class="sidebar-tab group absolute bottom-4 left-0 w-full flex justify-center hidden"
         title="Expand Profile"
       >
-        <img
-          id="collapsedProfileAvatar"
-          src="/images/default_avatar.png"
-          class="w-12 h-12 rounded-[24px] group-hover:rounded-xl transition-all duration-300 object-cover shadow-md border-2 border-transparent group-hover:border-discord-blurple"
-        />
+        <div class="avatar-container relative">
+          <img
+            id="collapsedProfileAvatar"
+            src="/images/default_avatar.png"
+            class="w-12 h-12 rounded-[24px] group-hover:rounded-xl transition-all duration-300 object-cover shadow-md border-2 border-transparent group-hover:border-discord-blurple relative z-10"
+          />
+          <div class="avatar-frame absolute inset-0 pointer-events-none rounded-full"></div>
+          <div class="avatar-effect absolute inset-0 pointer-events-none rounded-full"></div>
+        </div>
       </a>
     </nav>
 
@@ -622,7 +627,7 @@
       <!-- Expanded Profile Card (2nd Sidebar) -->
       <div
         id="expandedProfileCard"
-        class="flex-shrink-0 m-2 mt-auto p-2 bg-black/20 backdrop-blur-md border border-white/5 rounded-2xl flex relative items-center justify-between transition-all duration-300 group/profile"
+        class="flex-shrink-0 m-2 mt-auto p-2 bg-black/20 backdrop-blur-md modal-backdrop-blur border border-white/5 rounded-2xl flex relative items-center justify-between transition-all duration-300 group/profile"
       >
         <button
           onclick="toggleProfileCard()"
@@ -642,12 +647,16 @@
               navigateTo('profile');
           "
         >
-          <img
-            id="userPanelAvatar"
-            src="/images/default_avatar.png"
-            alt="Avatar"
-            class="w-9 h-9 rounded-full shadow-sm"
-          />
+          <div class="avatar-container relative">
+            <img
+              id="userPanelAvatar"
+              src="/images/default_avatar.png"
+              alt="Avatar"
+              class="w-9 h-9 rounded-full shadow-sm relative z-10"
+            />
+            <div class="avatar-frame absolute inset-0 pointer-events-none rounded-full"></div>
+            <div class="avatar-effect absolute inset-0 pointer-events-none rounded-full"></div>
+          </div>
           <div class="flex flex-col min-w-0 pr-1">
             <div class="flex items-center gap-1">
               <span
@@ -2125,11 +2134,15 @@
                         document.getElementById('settingsAvatarUpload').click()
                       "
                     >
-                      <img
-                        id="avatarImage"
-                        src="/images/default_avatar.png"
-                        class="w-24 h-24 rounded-full border-[6px] border-discord-gray-800 object-cover shadow-lg relative z-10 transition transform hover:scale-105"
-                      />
+                      <div class="avatar-container relative">
+                        <img
+                          id="avatarImage"
+                          src="/images/default_avatar.png"
+                          class="w-24 h-24 rounded-full border-[6px] border-discord-gray-800 object-cover shadow-lg relative z-10 transition transform hover:scale-105"
+                        />
+                        <div class="avatar-frame absolute inset-0 pointer-events-none rounded-full"></div>
+                        <div class="avatar-effect absolute inset-0 pointer-events-none rounded-full"></div>
+                      </div>
                       <div
                         class="absolute inset-0 rounded-full bg-black/40 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300"
                       >
@@ -2291,10 +2304,10 @@
                     Media
                   </button>
                   <button
-                    disabled
-                    class="profile-tab px-4 py-2 text-sm font-medium rounded-lg transition-colors whitespace-nowrap text-gray-500 cursor-not-allowed"
+                    onclick="openProfileEffectsModal()"
+                    class="profile-tab px-4 py-2 text-sm font-medium rounded-lg transition-colors whitespace-nowrap hover:bg-discord-gray-700 hover:text-white"
                   >
-                    Effects (In-Dev)
+                    Effects
                   </button>
                 </div>
 
@@ -2334,10 +2347,10 @@
                       Media
                     </button>
                     <button
-                      disabled
-                      class="profile-tab px-4 py-2 text-sm font-medium rounded-lg transition-colors text-left text-gray-500 cursor-not-allowed"
+                      onclick="openProfileEffectsModal()"
+                      class="profile-tab px-4 py-2 text-sm font-medium rounded-lg transition-colors text-left hover:bg-discord-gray-700 hover:text-white"
                     >
-                      Effects (In-Dev)
+                      Effects
                     </button>
                   </div>
                 </div>
@@ -2557,7 +2570,7 @@
           >
             <!-- Header / Input Card -->
             <div
-              class="backdrop-blur-md p-6 rounded-2xl shadow-2xl animate-slideDown"
+              class="backdrop-blur-md modal-backdrop-blur p-6 rounded-2xl shadow-2xl animate-slideDown"
               style="
                 background: var(--moments-input-bg);
                 border: 1px solid var(--moments-input-border);
@@ -3448,14 +3461,15 @@
                   </div>
                 </div>
                 <button
-                  disabled
-                  class="shrink-0 px-5 py-2.5 bg-purple-600/20 text-purple-400 rounded-xl font-medium cursor-not-allowed border border-purple-500/30"
+                  id="advanceThemeEditorBtn"
+                  onclick="openThemeEditor()"
+                  class="shrink-0 px-5 py-2.5 bg-purple-600 hover:bg-purple-500 text-white rounded-xl font-medium cursor-pointer border border-purple-500/50 transition-colors shadow-lg shadow-purple-500/20"
                 >
                   <i
-                    data-feather="lock"
+                    data-feather="edit-3"
                     class="w-4 h-4 inline mr-1 -mt-0.5"
                   ></i>
-                  In-Dev
+                  <span id="advanceThemeEditorBtnText">Open Editor</span>
                 </button>
               </div>
 
@@ -4593,7 +4607,7 @@
                     class="absolute inset-0 bg-black/40 opacity-0 group-hover/banner:opacity-100 transition-opacity flex flex-col items-center justify-center"
                   >
                     <div
-                      class="bg-white/10 backdrop-blur-md p-3 rounded-full text-white mb-2"
+                      class="bg-white/10 backdrop-blur-md modal-backdrop-blur p-3 rounded-full text-white mb-2"
                     >
                       <i data-feather="camera" class="w-6 h-6"></i>
                     </div>
@@ -4618,7 +4632,7 @@
                       class="avatar-label cursor-pointer relative group/avatar block"
                     >
                       <div
-                        class="relative inline-block rounded-full bg-discord-gray-900 overflow-visible"
+                        class="relative inline-block rounded-full bg-discord-gray-900 overflow-visible avatar-container"
                       >
                         <div
                           class="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 p-[3px] -m-[3px]"
@@ -4629,6 +4643,8 @@
                           alt="Avatar"
                           class="w-32 h-32 rounded-full border-[6px] border-[#1e2227] object-cover avatar-img relative z-10"
                         />
+                        <div class="avatar-frame absolute inset-0 pointer-events-none rounded-full z-20"></div>
+                        <div class="avatar-effect absolute inset-0 pointer-events-none rounded-full z-20"></div>
                       </div>
                       <div
                         class="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover/avatar:opacity-100 transition-opacity flex items-center justify-center z-20 m-[3px]"
@@ -5043,354 +5059,195 @@
 
     <div
       id="profileEffectsModal"
-      class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 hidden flex items-center justify-center px-4"
+      class="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm modal-backdrop-blur z-50 hidden flex items-center justify-center px-4"
     >
       <div
-        class="bg-discord-gray-800 max-w-4xl w-full p-6 rounded-lg shadow-xl animate-fadeIn max-h-[90vh] overflow-y-auto"
+        class="bg-discord-gray-800 max-w-4xl w-full rounded-lg shadow-xl animate-fadeIn max-h-[90vh] flex flex-col overflow-hidden"
       >
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-xl font-semibold text-white">Profile Effects</h3>
+        <div class="px-6 py-4 border-b border-discord-gray-700 flex items-center justify-between bg-discord-gray-900">
+          <h3 class="text-xl font-bold text-white tracking-wide">Cosmetics</h3>
           <button
             onclick="closeProfileEffectsModal()"
-            class="text-discord-gray-400 hover:text-red-500"
+            class="text-discord-gray-400 hover:text-red-500 transition-colors"
           >
             <i data-feather="x" class="w-6 h-6"></i>
           </button>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div>
-            <h4 class="text-lg font-semibold mb-3 text-discord-gray-200">
+        
+        <div class="flex flex-1 overflow-hidden">
+          <!-- Sidebar Tabs -->
+          <div class="w-48 bg-discord-gray-900 border-r border-discord-gray-700 flex flex-col shrink-0 flex-none p-2 space-y-1" id="cosmeticsTabs">
+            <button onclick="switchCosmeticTab('avatarFrame')" class="cosmetics-tab-btn active w-full text-left px-4 py-2.5 rounded text-discord-gray-200 hover:bg-discord-gray-700 hover:text-white font-medium transition-colors" data-target="avatarFrameSection">
+              Avatar Frames
+            </button>
+            <button onclick="switchCosmeticTab('avatarEffect')" class="cosmetics-tab-btn w-full text-left px-4 py-2.5 rounded text-discord-gray-200 hover:bg-discord-gray-700 hover:text-white font-medium transition-colors" data-target="avatarEffectSection">
               Avatar Effects
-            </h4>
-            <p class="text-xs text-discord-gray-400 mb-2">
-              Choose how your avatar appears across Zylo.
-            </p>
-            <div class="space-y-3">
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="avatarEffect"
-                  value="none"
-                  class="mr-3"
-                  checked
-                />
-                <span class="flex-1">None</span>
-                <div
-                  class="w-10 h-10 rounded-full bg-discord-gray-600 preview-avatar"
-                  data-effect="none"
-                ></div>
-              </label>
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="avatarEffect"
-                  value="glow"
-                  class="mr-3"
-                />
-                <span class="flex-1">Neon Glow</span>
-                <div
-                  class="w-10 h-10 rounded-full bg-discord-gray-600 preview-avatar"
-                  data-effect="glow"
-                ></div>
-              </label>
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="avatarEffect"
-                  value="pulse"
-                  class="mr-3"
-                />
-                <span class="flex-1">Soft Pulse</span>
-                <div
-                  class="w-10 h-10 rounded-full bg-discord-gray-600 preview-avatar"
-                  data-effect="pulse"
-                ></div>
-              </label>
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="avatarEffect"
-                  value="ring"
-                  class="mr-3"
-                />
-                <span class="flex-1">Status Ring</span>
-                <div
-                  class="w-10 h-10 rounded-full bg-discord-gray-600 preview-avatar"
-                  data-effect="ring"
-                ></div>
-              </label>
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="avatarEffect"
-                  value="sparkle"
-                  class="mr-3"
-                />
-                <span class="flex-1">Sparkle</span>
-                <div
-                  class="w-10 h-10 rounded-full bg-discord-gray-600 preview-avatar"
-                  data-effect="sparkle"
-                ></div>
-              </label>
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="avatarEffect"
-                  value="vintage"
-                  class="mr-3"
-                />
-                <span class="flex-1">Vintage</span>
-                <div
-                  class="w-10 h-10 rounded-full bg-discord-gray-600 preview-avatar"
-                  data-effect="vintage"
-                ></div>
-              </label>
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="avatarEffect"
-                  value="neon-border"
-                  class="mr-3"
-                />
-                <span class="flex-1">Neon Border</span>
-                <div
-                  class="w-10 h-10 rounded-full bg-discord-gray-600 preview-avatar"
-                  data-effect="neon-border"
-                ></div>
-              </label>
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="avatarEffect"
-                  value="gradient-border"
-                  class="mr-3"
-                />
-                <span class="flex-1">Gradient Border</span>
-                <div
-                  class="w-10 h-10 rounded-full bg-discord-gray-600 preview-avatar"
-                  data-effect="gradient-border"
-                ></div>
-              </label>
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="avatarEffect"
-                  value="frosted"
-                  class="mr-3"
-                />
-                <span class="flex-1">Frosted Glass</span>
-                <div
-                  class="w-10 h-10 rounded-full bg-discord-gray-600 preview-avatar"
-                  data-effect="frosted"
-                ></div>
-              </label>
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="avatarEffect"
-                  value="holographic"
-                  class="mr-3"
-                />
-                <span class="flex-1">Holographic</span>
-                <div
-                  class="w-10 h-10 rounded-full bg-discord-gray-600 preview-avatar"
-                  data-effect="holographic"
-                ></div>
-              </label>
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="avatarEffect"
-                  value="matrix"
-                  class="mr-3"
-                />
-                <span class="flex-1">Matrix Code</span>
-                <div
-                  class="w-10 h-10 rounded-full bg-discord-gray-600 preview-avatar"
-                  data-effect="matrix"
-                ></div>
-              </label>
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="avatarEffect"
-                  value="cyberpunk"
-                  class="mr-3"
-                />
-                <span class="flex-1">Cyberpunk</span>
-                <div
-                  class="w-10 h-10 rounded-full bg-discord-gray-600 preview-avatar"
-                  data-effect="cyberpunk"
-                ></div>
-              </label>
-            </div>
-          </div>
-          <div>
-            <h4 class="text-lg font-semibold mb-3 text-discord-gray-200">
+            </button>
+            <button onclick="switchCosmeticTab('bannerEffect')" class="cosmetics-tab-btn w-full text-left px-4 py-2.5 rounded text-discord-gray-200 hover:bg-discord-gray-700 hover:text-white font-medium transition-colors" data-target="bannerEffectSection">
               Banner Effects
-            </h4>
-            <p class="text-xs text-discord-gray-400 mb-2">
-              Stylize the banner behind your profile.
-            </p>
-            <div class="space-y-3">
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="bannerEffect"
-                  value="none"
-                  class="mr-3"
-                  checked
-                />
-                <span class="flex-1">None</span>
-              </label>
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="bannerEffect"
-                  value="blur-overlay"
-                  class="mr-3"
-                />
-                <span class="flex-1">Blur Overlay</span>
-              </label>
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="bannerEffect"
-                  value="gradient-overlay"
-                  class="mr-3"
-                />
-                <span class="flex-1">Gradient Overlay</span>
-              </label>
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="bannerEffect"
-                  value="vignette"
-                  class="mr-3"
-                />
-                <span class="flex-1">Vignette</span>
-              </label>
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="bannerEffect"
-                  value="neon-glow"
-                  class="mr-3"
-                />
-                <span class="flex-1">Neon Glow</span>
-              </label>
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="bannerEffect"
-                  value="cyber-grid"
-                  class="mr-3"
-                />
-                <span class="flex-1">Cyber Grid</span>
-              </label>
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="bannerEffect"
-                  value="holographic-banner"
-                  class="mr-3"
-                />
-                <span class="flex-1">Holographic</span>
-              </label>
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="bannerEffect"
-                  value="matrix-banner"
-                  class="mr-3"
-                />
-                <span class="flex-1">Matrix Stream</span>
-              </label>
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="bannerEffect"
-                  value="retro-wave"
-                  class="mr-3"
-                />
-                <span class="flex-1">Retro Wave</span>
-              </label>
-              <label
-                class="flex items-center p-3 border border-discord-gray-700 rounded-lg cursor-pointer hover:bg-discord-gray-700"
-              >
-                <input
-                  type="radio"
-                  name="bannerEffect"
-                  value="neon-city"
-                  class="mr-3"
-                />
-                <span class="flex-1">Neon City</span>
-              </label>
+            </button>
+          </div>
+
+          <!-- Main Content Area -->
+          <div class="flex-1 flex flex-col bg-discord-gray-800">
+            <!-- Live Preview Header -->
+            <div class="p-6 bg-[#1e1f22] flex justify-center items-center relative shrink-0 min-h-[140px] border-b border-discord-gray-700">
+                <!-- Live Preview Background -->
+                <div id="livePreviewBannerContainer" class="absolute inset-0 banner-wrapper pointer-events-none overflow-hidden">
+                    <img id="livePreviewBannerImg" src="/images/default_banner.png" class="w-full h-full object-cover">
+                </div>
+                <!-- Live Preview Avatar -->
+                <div class="avatar-container relative z-10 w-24 h-24 mt-2">
+                    <img id="livePreviewAvatar" src="/images/default_avatar.png" class="w-24 h-24 rounded-full border-4 border-[#1e1f22] object-cover bg-discord-gray-900 avatar-img shadow-lg" />
+                    <div id="livePreviewFrame" class="avatar-frame absolute inset-0 pointer-events-none rounded-full"></div>
+                    <div id="livePreviewEffect" class="avatar-effect absolute inset-0 pointer-events-none rounded-full"></div>
+                </div>
+            </div>
+            
+            <!-- Selection Panels -->
+            <div class="flex-1 overflow-y-auto p-6">
+              <div id="avatarFrameSection" class="cosmetics-panel block space-y-4">
+                  <h4 class="text-lg font-bold text-white mb-2">Avatar Frames</h4>
+                  <p class="text-sm text-discord-gray-400 mb-4">Stand out with a custom frame around your avatar.</p>
+                  <div id="avatarFrameList" class="grid grid-cols-2 lg:grid-cols-3 gap-3"></div>
+              </div>
+
+              <div id="avatarEffectSection" class="cosmetics-panel hidden space-y-4">
+                  <h4 class="text-lg font-bold text-white mb-2">Avatar Effects</h4>
+                  <p class="text-sm text-discord-gray-400 mb-4">Add magical animations and glowing auras to your avatar.</p>
+                  <div id="avatarEffectList" class="grid grid-cols-2 lg:grid-cols-3 gap-3"></div>
+              </div>
+
+              <div id="bannerEffectSection" class="cosmetics-panel hidden space-y-4">
+                  <h4 class="text-lg font-bold text-white mb-2">Banner Effects</h4>
+                  <p class="text-sm text-discord-gray-400 mb-4">Stylize the background banner on your profile profile card.</p>
+                  <div id="bannerEffectList" class="grid grid-cols-2 lg:grid-cols-3 gap-3"></div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="flex gap-3 justify-end">
+
+        <div class="px-6 py-4 bg-discord-gray-900 border-t border-discord-gray-700 flex gap-3 justify-end shrink-0">
           <button
             onclick="closeProfileEffectsModal()"
-            class="px-4 py-2 bg-discord-gray-600 hover:bg-discord-gray-500 text-white rounded-lg"
+            class="px-5 py-2 hover:underline text-white rounded-lg font-medium"
           >
             Cancel
           </button>
           <button
             onclick="applyProfileEffects()"
-            class="px-4 py-2 bg-discord-blurple hover:bg-opacity-80 text-white rounded-lg"
+            class="px-5 py-2 bg-discord-blurple hover:bg-indigo-500 text-white rounded-lg font-bold transition shadow-sm"
           >
-            Apply Effects
+            Apply Changes
           </button>
         </div>
       </div>
     </div>
 
+    <script>
+      function switchCosmeticTab(tabId) {
+        // Update tab buttons
+        document.querySelectorAll('.cosmetics-tab-btn').forEach(btn => {
+          if (btn.dataset.target === `${tabId}Section`) {
+            btn.classList.add('bg-discord-gray-700', 'text-white', 'active');
+            btn.classList.remove('text-discord-gray-200');
+          } else {
+            btn.classList.remove('bg-discord-gray-700', 'text-white', 'active');
+            btn.classList.add('text-discord-gray-200');
+          }
+        });
+
+        // Update panels
+        document.querySelectorAll('.cosmetics-panel').forEach(panel => {
+          if (panel.id === `${tabId}Section`) {
+            panel.classList.remove('hidden');
+            panel.classList.add('block');
+          } else {
+            panel.classList.add('hidden');
+            panel.classList.remove('block');
+          }
+        });
+      }
+
+      function updateLivePreview() {
+        const frameKey = document.querySelector('input[name="profileFrame"]:checked')?.value || 'none';
+        const effectKey = document.querySelector('input[name="avatarEffect"]:checked')?.value || 'none';
+        const bannerKey = document.querySelector('input[name="bannerEffect"]:checked')?.value || 'none';
+
+        // Fake container object that has the queried nodes so applyAvatarCosmetics works
+        const liveContainer = {
+            classList: { contains: () => true },
+            querySelector: (selector) => {
+                if (selector === '.avatar-frame') return document.getElementById('livePreviewFrame');
+                if (selector === '.avatar-effect') return document.getElementById('livePreviewEffect');
+                return null;
+            }
+        };
+
+        if (window.applyAvatarCosmetics) {
+            window.applyAvatarCosmetics(liveContainer, effectKey, frameKey);
+        }
+
+        const liveBannerGroup = document.getElementById('livePreviewBannerContainer');
+        if (liveBannerGroup && window.applyBannerCosmetics) {
+            window.applyBannerCosmetics(liveBannerGroup, bannerKey);
+        }
+      }
+
+      // Populate cosmetic modal from registry
+      function renderCosmeticsModal() {
+          const frameList = document.getElementById('avatarFrameList');
+          const effectList = document.getElementById('avatarEffectList');
+          const bannerList = document.getElementById('bannerEffectList');
+          
+          if (!frameList || !COSMETICS) return;
+
+          frameList.innerHTML = '';
+          effectList.innerHTML = '';
+          bannerList.innerHTML = '';
+
+          // Generic renderer
+          const renderItem = (group, key, data, name) => {
+              const rarityData = COSMETICS.rarities[data.rarity || 'common'];
+              const rarityColor = rarityData ? rarityData.color : 'text-discord-gray-400';
+              const rarityLabel = rarityData ? rarityData.label.toUpperCase() : 'COMMON';
+
+              return `
+                <label class="group flex flex-col p-3 border border-discord-gray-700/50 bg-[#25262b] rounded-xl cursor-pointer hover:bg-discord-gray-700 hover:border-discord-gray-600 transition-all relative overflow-hidden has-[:checked]:border-discord-blurple has-[:checked]:bg-discord-blurple/10">
+                  <input type="radio" name="${name}" value="${key}" class="absolute opacity-0" onchange="updateLivePreview()">
+                  <div class="flex items-start justify-between mb-2">
+                      <span class="font-bold text-white text-sm whitespace-nowrap overflow-hidden text-ellipsis mr-2">${data.label}</span>
+                      <div class="w-4 h-4 rounded-full border-2 border-discord-gray-500 group-has-[:checked]:border-discord-blurple group-has-[:checked]:bg-discord-blurple flex-shrink-0 flex items-center justify-center transition-colors">
+                          <div class="w-1.5 h-1.5 bg-white rounded-full opacity-0 group-has-[:checked]:opacity-100"></div>
+                      </div>
+                  </div>
+                  <div class="text-[10px] font-bold tracking-wider ${rarityColor} mb-3 mt-auto flex-1">${rarityLabel}</div>
+                </label>
+              `;
+          };
+
+          for(const [key, data] of Object.entries(COSMETICS.frames)) {
+              frameList.innerHTML += renderItem(COSMETICS.frames, key, data, 'profileFrame');
+          }
+          
+          for(const [key, data] of Object.entries(COSMETICS.effects)) {
+              effectList.innerHTML += renderItem(COSMETICS.effects, key, data, 'avatarEffect');
+          }
+
+          for(const [key, data] of Object.entries(COSMETICS.bannerEffects)) {
+              bannerList.innerHTML += renderItem(COSMETICS.bannerEffects, key, data, 'bannerEffect');
+          }
+      }
+
+      // init
+      document.addEventListener('DOMContentLoaded', () => {
+          setTimeout(renderCosmeticsModal, 500); 
+      });
+    </script>
+
     <div
       id="saveSettingsModal"
-      class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 hidden flex items-center justify-center px-4"
+      class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm modal-backdrop-blur z-50 hidden flex items-center justify-center px-4"
     >
       <div
         class="bg-discord-gray-800 max-w-md w-full p-6 rounded-lg shadow-xl animate-fadeIn"
@@ -5432,360 +5289,262 @@
 
     <div
       id="themeEditorOverlay"
-      class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] hidden"
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm modal-backdrop-blur z-[200] hidden"
     ></div>
     <div
       id="themeEditorModal"
-      class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[210] w-[95%] max-w-4xl h-[90vh] md:h-[80vh] overflow-hidden rounded-xl shadow-2xl hidden"
+      class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[210] w-[95%] max-w-5xl h-[90vh] md:h-[85vh] rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.8)] hidden overflow-hidden bg-[#111214]/90 backdrop-blur-2xl border border-white/10 flex flex-col"
     >
-      <div
-        class="bg-discord-gray-800 text-discord-gray-300 h-full flex flex-col"
-      >
-        <div
-          class="flex items-center justify-between px-4 py-3 border-b border-discord-gray-900"
-        >
-          <h3 class="text-lg font-semibold text-white">Theme Editor</h3>
-          <div class="flex items-center gap-2">
-            <select
-              id="savedThemesSelect"
-              class="text-sm bg-discord-gray-700 border rounded px-2 py-1 border-discord-gray-900"
-            >
-              <option value="">Select saved theme…</option>
-            </select>
-            <button
-              id="saveThemeBtn"
-              class="px-3 py-1 rounded bg-discord-blurple text-white text-sm"
-            >
-              Save
-            </button>
-            <button
-              id="deleteThemeBtn"
-              class="px-3 py-1 rounded bg-red-600 text-white text-sm"
-            >
-              Delete
-            </button>
-            <button
-              id="closeThemeEditorBtn"
-              class="px-2 py-1 rounded bg-discord-gray-700"
-            >
-              ✖
-            </button>
+      <!-- Sleek Modal Header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-black/20">
+        <div class="flex items-center gap-3">
+          <div class="p-2.5 bg-gradient-to-br from-discord-blurple to-purple-600 rounded-xl text-white shadow-lg shadow-purple-500/20">
+            <i data-feather="monitor" class="w-5 h-5"></i>
           </div>
-        </div>
-
-        <div class="flex-1 overflow-y-auto p-4 md:p-6 te-scroll-container">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Controls -->
-            <div class="space-y-6">
-              <div>
-                <h4
-                  class="text-sm font-bold text-discord-gray-400 uppercase mb-3"
-                >
-                  UI Colors
-                </h4>
-                <div class="grid grid-cols-2 gap-4">
-                  <div class="space-y-2">
-                    <label class="text-xs font-semibold"
-                      >Navbar Background</label
-                    >
-                    <input
-                      type="color"
-                      id="teNavbarBg"
-                      class="w-full h-10 rounded border border-discord-gray-900 bg-discord-gray-700 p-1"
-                    />
-                  </div>
-                  <div class="space-y-2">
-                    <label class="text-xs font-semibold"
-                      >Sidebar Background</label
-                    >
-                    <input
-                      type="color"
-                      id="teSidebarBg"
-                      class="w-full h-10 rounded border border-discord-gray-900 bg-discord-gray-700 p-1"
-                    />
-                  </div>
-                  <div class="space-y-2">
-                    <label class="text-xs font-semibold"
-                      >Panel Background</label
-                    >
-                    <input
-                      type="color"
-                      id="tePanelBg"
-                      class="w-full h-10 rounded border border-discord-gray-900 bg-discord-gray-700 p-1"
-                    />
-                  </div>
-                  <div class="space-y-2">
-                    <label class="text-xs font-semibold">Text Color</label>
-                    <input
-                      type="color"
-                      id="teTextColor"
-                      class="w-full h-10 rounded border border-discord-gray-900 bg-discord-gray-700 p-1"
-                    />
-                  </div>
-                  <div class="space-y-2">
-                    <label class="text-xs font-semibold">Accent Color</label>
-                    <input
-                      type="color"
-                      id="teAccentColor"
-                      class="w-full h-10 rounded border border-discord-gray-900 bg-discord-gray-700 p-1"
-                    />
-                  </div>
-                  <div class="space-y-2">
-                    <label class="text-xs font-semibold">Main Background</label>
-                    <input
-                      type="color"
-                      id="teMainBg"
-                      class="w-full h-10 rounded border border-discord-gray-900 bg-discord-gray-700 p-1"
-                    />
-                  </div>
-                  <div class="space-y-2">
-                    <label class="text-xs font-semibold"
-                      >Header Background</label
-                    >
-                    <input
-                      type="color"
-                      id="teHeaderBg"
-                      class="w-full h-10 rounded border border-discord-gray-900 bg-discord-gray-700 p-1"
-                    />
-                  </div>
-                  <div class="space-y-2">
-                    <label class="text-xs font-semibold"
-                      >User Panel (Footer)</label
-                    >
-                    <input
-                      type="color"
-                      id="teUserPanelBg"
-                      class="w-full h-10 rounded border border-discord-gray-900 bg-discord-gray-700 p-1"
-                    />
-                  </div>
-                  <div class="space-y-2">
-                    <label class="text-xs font-semibold">Button Hover</label>
-                    <input
-                      type="color"
-                      id="teHoverBg"
-                      class="w-full h-10 rounded border border-discord-gray-900 bg-discord-gray-700 p-1"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h4
-                  class="text-sm font-bold text-discord-gray-400 uppercase mb-3"
-                >
-                  Background Style
-                </h4>
-                <div class="flex gap-4 mb-4">
-                  <label class="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="teBgMode"
-                      value="solid"
-                      class="accent-discord-blurple"
-                    />
-                    Solid
-                  </label>
-                  <label class="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="teBgMode"
-                      value="gradient"
-                      checked
-                      class="accent-discord-blurple"
-                    />
-                    Gradient
-                  </label>
-                  <label class="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="teBgMode"
-                      value="image"
-                      class="accent-discord-blurple"
-                    />
-                    Image
-                  </label>
-                  <label class="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="teBgMode"
-                      value="animated"
-                      class="accent-discord-blurple"
-                    />
-                    Animated
-                  </label>
-                </div>
-
-                <!-- Solid Controls -->
-                <div id="teSolidControls" class="hidden space-y-2">
-                  <label class="text-xs font-semibold">Background Color</label>
-                  <input
-                    type="color"
-                    id="teSolidColor"
-                    class="w-full h-10 rounded border border-discord-gray-900 bg-discord-gray-700 p-1"
-                  />
-                </div>
-
-                <!-- Gradient Controls -->
-                <div id="teGradientControls" class="space-y-4">
-                  <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-2">
-                      <label class="text-xs font-semibold">From</label>
-                      <input
-                        type="color"
-                        id="teGradFrom"
-                        value="#1e293b"
-                        class="w-full h-10 rounded border border-discord-gray-900 bg-discord-gray-700 p-1"
-                      />
-                    </div>
-                    <div class="space-y-2">
-                      <label class="text-xs font-semibold">To</label>
-                      <input
-                        type="color"
-                        id="teGradTo"
-                        value="#0f172a"
-                        class="w-full h-10 rounded border border-discord-gray-900 bg-discord-gray-700 p-1"
-                      />
-                    </div>
-                  </div>
-                  <div class="space-y-2">
-                    <label class="text-xs font-semibold">Angle (deg)</label>
-                    <input
-                      type="range"
-                      id="teGradAngle"
-                      min="0"
-                      max="360"
-                      value="135"
-                      class="w-full accent-discord-blurple"
-                    />
-                  </div>
-                </div>
-
-                <!-- Image Controls -->
-                <div id="teImageControls" class="hidden space-y-4">
-                  <div class="flex items-center gap-3">
-                    <input
-                      type="file"
-                      id="teBgImageInput"
-                      class="hidden"
-                      accept="image/*"
-                    />
-                    <button
-                      onclick="
-                        document.getElementById('teBgImageInput').click()
-                      "
-                      class="flex-1 py-2 rounded bg-discord-gray-700 hover:bg-discord-gray-600 text-sm font-medium"
-                    >
-                      Choose Image
-                    </button>
-                    <button
-                      id="teClearBgImageBtn"
-                      class="px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-sm font-medium"
-                    >
-                      Clear
-                    </button>
-                  </div>
-                </div>
-
-                <!-- Animated Controls -->
-                <div id="teAnimatedControls" class="hidden space-y-3">
-                  <p class="text-xs text-discord-gray-400">
-                    Choose an animation preset:
-                  </p>
-                  <div class="flex flex-wrap gap-2">
-                    <button
-                      data-anim="gradientShift"
-                      class="px-3 py-1 rounded bg-discord-gray-700 hover:bg-discord-gray-600 text-xs active"
-                    >
-                      Shift
-                    </button>
-                    <button
-                      data-anim="floatingBubbles"
-                      class="px-3 py-1 rounded bg-discord-gray-700 hover:bg-discord-gray-600 text-xs"
-                    >
-                      Bubbles
-                    </button>
-                    <button
-                      data-anim="starfield"
-                      class="px-3 py-1 rounded bg-discord-gray-700 hover:bg-discord-gray-600 text-xs"
-                    >
-                      Stars
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Preview -->
-            <div class="flex flex-col">
-              <h4
-                class="text-sm font-bold text-discord-gray-400 uppercase mb-3"
-              >
-                Preview
-              </h4>
-              <div
-                id="tePreview"
-                class="flex-1 rounded-xl overflow-hidden border border-discord-gray-900 shadow-inner relative min-h-[300px]"
-                style="background: linear-gradient(135deg, #1e293b, #0f172a)"
-              >
-                <!-- Mock UI -->
-                <div
-                  class="absolute top-3 left-3 right-3 h-6 rounded bg-discord-gray-900/50 backdrop-blur-sm"
-                ></div>
-                <div
-                  class="absolute top-11 left-3 bottom-3 w-10 rounded bg-discord-gray-900/40 backdrop-blur-sm"
-                ></div>
-                <div
-                  class="absolute top-11 left-15 right-3 bottom-3 p-3 space-y-2"
-                >
-                  <div class="h-4 w-3/4 rounded bg-discord-gray-600/50"></div>
-                  <div class="h-4 w-1/2 rounded bg-discord-gray-600/30"></div>
-                  <div
-                    class="h-20 w-full rounded bg-discord-gray-600/20 mt-4"
-                  ></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div
-          class="p-4 bg-discord-gray-900 flex justify-between items-center gap-3"
-        >
           <div>
-            <button
-              id="teResetBtn"
-              class="px-4 py-2 rounded-lg bg-red-600/20 hover:bg-red-600/40 text-red-500 text-sm font-medium transition border border-red-600/30"
-            >
-              Reset to Default
-            </button>
+            <h3 class="text-lg font-bold text-white tracking-wide">Theme Designer</h3>
+            <p class="text-xs text-discord-gray-400">Craft your ultimate Zylo experience</p>
           </div>
-          <div class="flex gap-3">
-            <button
-              id="teCancelBtn"
-              class="px-6 py-2 rounded-lg bg-discord-gray-700 hover:bg-discord-gray-600 font-medium transition text-sm"
-            >
-              Cancel
-            </button>
-            <button
-              id="teApplyBgBtn"
-              class="px-6 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-medium transition text-sm"
-            >
-              Apply Background
-            </button>
-            <button
-              id="teApplyThemeBtn"
-              class="px-6 py-2 rounded-lg bg-discord-blurple hover:bg-opacity-80 text-white font-medium transition text-sm"
-            >
-              Apply Full Theme
-            </button>
+        </div>
+        <div class="flex items-center gap-3">
+          <select id="savedThemesSelect" class="text-sm bg-[#1e1f22] border border-white/5 rounded-lg px-3 py-1.5 focus:outline-none focus:border-discord-blurple transition text-discord-gray-300 min-w-[160px]">
+            <option value="">Select saved theme…</option>
+          </select>
+          <button id="saveThemeBtn" class="px-4 py-1.5 rounded-lg bg-discord-blurple/10 hover:bg-discord-blurple/20 text-discord-blurple border border-discord-blurple/30 font-semibold text-sm transition font-sans">
+            Save
+          </button>
+          <button id="deleteThemeBtn" class="px-4 py-1.5 rounded-lg bg-red-600/10 hover:bg-red-600/20 text-red-500 border border-red-600/30 font-semibold text-sm transition font-sans hidden">
+            Delete
+          </button>
+          <button id="closeThemeEditorBtn" class="ml-2 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-discord-gray-300 hover:text-white transition">
+            <i data-feather="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Body -->
+      <div class="flex-1 overflow-hidden flex flex-col md:flex-row">
+        <!-- Scrollable Controls -->
+        <div class="w-full md:w-[45%] lg:w-[40%] overflow-y-auto p-6 space-y-8 custom-scrollbar border-r border-white/5">
+          <!-- 1. UI Colors -->
+          <div class="space-y-4">
+            <h4 class="text-xs font-bold text-discord-gray-400 uppercase tracking-widest flex items-center gap-2">
+              <i data-feather="palette" class="w-4 h-4 text-discord-blurple"></i> Interface Colors
+            </h4>
+            <div class="grid grid-cols-2 gap-4">
+              <!-- Helper to render stylish color inputs (CSS added separately to target these) -->
+              <label class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition cursor-pointer group">
+                 <input type="color" id="teNavbarBg" class="w-8 h-8 rounded-full cursor-pointer bg-transparent border-none p-0 flex-shrink-0" />
+                 <span class="text-sm font-medium text-discord-gray-300 group-hover:text-white transition">Navbar</span>
+              </label>
+              <label class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition cursor-pointer group">
+                 <input type="color" id="teSidebarBg" class="w-8 h-8 rounded-full cursor-pointer bg-transparent border-none p-0 flex-shrink-0" />
+                 <span class="text-sm font-medium text-discord-gray-300 group-hover:text-white transition">Sidebar</span>
+              </label>
+              <label class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition cursor-pointer group">
+                 <input type="color" id="tePanelBg" class="w-8 h-8 rounded-full cursor-pointer bg-transparent border-none p-0 flex-shrink-0" />
+                 <span class="text-sm font-medium text-discord-gray-300 group-hover:text-white transition">Panel</span>
+              </label>
+              <label class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition cursor-pointer group">
+                 <input type="color" id="teTextColor" class="w-8 h-8 rounded-full cursor-pointer bg-transparent border-none p-0 flex-shrink-0" />
+                 <span class="text-sm font-medium text-discord-gray-300 group-hover:text-white transition">Text</span>
+              </label>
+              <label class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition cursor-pointer group">
+                 <input type="color" id="teAccentColor" class="w-8 h-8 rounded-full cursor-pointer bg-transparent border-none p-0 flex-shrink-0" />
+                 <span class="text-sm font-medium text-discord-gray-300 group-hover:text-white transition">Accent</span>
+              </label>
+              <label class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition cursor-pointer group">
+                 <input type="color" id="teMainBg" class="w-8 h-8 rounded-full cursor-pointer bg-transparent border-none p-0 flex-shrink-0" />
+                 <span class="text-sm font-medium text-discord-gray-300 group-hover:text-white transition">Main Bg</span>
+              </label>
+              <label class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition cursor-pointer group">
+                 <input type="color" id="teHeaderBg" class="w-8 h-8 rounded-full cursor-pointer bg-transparent border-none p-0 flex-shrink-0" />
+                 <span class="text-sm font-medium text-discord-gray-300 group-hover:text-white transition">Header</span>
+              </label>
+              <label class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition cursor-pointer group">
+                 <input type="color" id="teUserPanelBg" class="w-8 h-8 rounded-full cursor-pointer bg-transparent border-none p-0 flex-shrink-0" />
+                 <span class="text-sm font-medium text-discord-gray-300 group-hover:text-white transition">Footer</span>
+              </label>
+              <label class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition cursor-pointer group">
+                 <input type="color" id="teHoverBg" class="w-8 h-8 rounded-full cursor-pointer bg-transparent border-none p-0 flex-shrink-0" />
+                 <span class="text-sm font-medium text-discord-gray-300 group-hover:text-white transition">Hover</span>
+              </label>
+            </div>
           </div>
+
+          <!-- 2. Background Styles -->
+          <div class="space-y-4">
+            <h4 class="text-xs font-bold text-discord-gray-400 uppercase tracking-widest flex items-center gap-2">
+              <i data-feather="image" class="w-4 h-4 text-purple-400"></i> Background Style
+            </h4>
+            <div class="grid grid-cols-2 gap-3">
+              <label class="relative group cursor-pointer">
+                <input type="radio" name="teBgMode" value="solid" class="peer sr-only" />
+                <div class="flex flex-col items-center justify-center p-3 rounded-xl border border-white/10 bg-[#1e1f22] text-discord-gray-400 peer-checked:bg-discord-blurple/10 peer-checked:border-discord-blurple peer-checked:text-discord-blurple hover:bg-white/5 transition">
+                  <i data-feather="square" class="w-5 h-5 mb-2"></i>
+                  <span class="text-xs font-bold">Solid</span>
+                </div>
+              </label>
+              <label class="relative group cursor-pointer">
+                <input type="radio" name="teBgMode" value="gradient" class="peer sr-only" checked />
+                <div class="flex flex-col items-center justify-center p-3 rounded-xl border border-white/10 bg-[#1e1f22] text-discord-gray-400 peer-checked:bg-discord-blurple/10 peer-checked:border-discord-blurple peer-checked:text-discord-blurple hover:bg-white/5 transition">
+                  <i data-feather="loader" class="w-5 h-5 mb-2"></i>
+                  <span class="text-xs font-bold">Gradient</span>
+                </div>
+              </label>
+              <label class="relative group cursor-pointer">
+                <input type="radio" name="teBgMode" value="image" class="peer sr-only" />
+                <div class="flex flex-col items-center justify-center p-3 rounded-xl border border-white/10 bg-[#1e1f22] text-discord-gray-400 peer-checked:bg-discord-blurple/10 peer-checked:border-discord-blurple peer-checked:text-discord-blurple hover:bg-white/5 transition">
+                  <i data-feather="camera" class="w-5 h-5 mb-2"></i>
+                  <span class="text-xs font-bold">Image</span>
+                </div>
+              </label>
+              <label class="relative group cursor-pointer">
+                <input type="radio" name="teBgMode" value="animated" class="peer sr-only" />
+                <div class="flex flex-col items-center justify-center p-3 rounded-xl border border-white/10 bg-[#1e1f22] text-discord-gray-400 peer-checked:bg-discord-blurple/10 peer-checked:border-discord-blurple peer-checked:text-discord-blurple hover:bg-white/5 transition">
+                  <i data-feather="film" class="w-5 h-5 mb-2"></i>
+                  <span class="text-xs font-bold">Animated</span>
+                </div>
+              </label>
+            </div>
+
+            <!-- Dynamic Settings Pane for Background -->
+            <div class="pt-4 border-t border-white/5 bg-black/10 rounded-xl p-4">
+              <!-- Solid Controls -->
+              <div id="teSolidControls" class="hidden flex items-center gap-4">
+                <label class="text-sm font-medium text-discord-gray-300">Choose Color:</label>
+                <input type="color" id="teSolidColor" class="w-10 h-10 rounded-full cursor-pointer bg-transparent border-none p-0" />
+              </div>
+
+              <!-- Gradient Controls -->
+              <div id="teGradientControls" class="space-y-5">
+                <div class="flex items-center gap-6">
+                  <div class="flex items-center gap-3">
+                    <label class="text-sm font-medium text-discord-gray-300">From</label>
+                    <input type="color" id="teGradFrom" value="#1e293b" class="w-8 h-8 rounded-full cursor-pointer bg-transparent border-none p-0" />
+                  </div>
+                  <i data-feather="arrow-right" class="w-4 h-4 text-discord-gray-500"></i>
+                  <div class="flex items-center gap-3">
+                    <label class="text-sm font-medium text-discord-gray-300">To</label>
+                    <input type="color" id="teGradTo" value="#0f172a" class="w-8 h-8 rounded-full cursor-pointer bg-transparent border-none p-0" />
+                  </div>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex justify-between">
+                    <label class="text-xs font-semibold text-discord-gray-400">Angle (deg)</label>
+                    <span id="teGradAngleVal" class="text-xs font-bold text-discord-blurple">135°</span>
+                  </div>
+                  <input type="range" id="teGradAngle" min="0" max="360" value="135" class="w-full h-2 bg-discord-gray-800 rounded-lg appearance-none cursor-pointer accent-discord-blurple" oninput="document.getElementById('teGradAngleVal').textContent = this.value + '°';" />
+                </div>
+              </div>
+
+              <!-- Image Controls -->
+              <div id="teImageControls" class="hidden space-y-4">
+                <div class="flex flex-col gap-3">
+                  <input type="file" id="teBgImageInput" class="hidden" accept="image/*" />
+                  <button onclick="document.getElementById('teBgImageInput').click()" class="w-full py-2.5 rounded-lg bg-discord-gray-700 hover:bg-discord-gray-600 text-sm font-medium flex items-center justify-center gap-2 transition">
+                    <i data-feather="upload" class="w-4 h-4"></i> Choose Image
+                  </button>
+                  <button id="teClearBgImageBtn" class="w-full py-2.5 rounded-lg bg-red-600/20 hover:bg-red-600/30 text-red-500 border border-red-500/30 text-sm font-medium transition">
+                    Clear Image
+                  </button>
+                </div>
+              </div>
+
+              <!-- Animated Controls -->
+              <div id="teAnimatedControls" class="hidden space-y-3">
+                <div class="grid grid-cols-3 gap-2">
+                  <button data-anim="gradientShift" class="py-2 px-1 rounded-lg bg-[#232428] border border-white/5 hover:bg-white/10 text-xs font-bold text-discord-gray-300 active focus:outline-none transition">
+                    Shift
+                  </button>
+                  <button data-anim="floatingBubbles" class="py-2 px-1 rounded-lg bg-[#232428] border border-white/5 hover:bg-white/10 text-xs font-bold text-discord-gray-300 focus:outline-none transition">
+                    Bubbles
+                  </button>
+                  <button data-anim="starfield" class="py-2 px-1 rounded-lg bg-[#232428] border border-white/5 hover:bg-white/10 text-xs font-bold text-discord-gray-300 focus:outline-none transition">
+                    Stars
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Preview Panel -->
+        <div class="flex-1 bg-black/40 p-6 flex flex-col">
+          <h4 class="text-xs font-bold text-discord-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+            <i data-feather="layout" class="w-4 h-4 text-green-400"></i> Interactive Preview
+          </h4>
+          
+          <div class="flex-1 flex items-center justify-center bg-[#000]/20 rounded-2xl border border-white/5 shadow-inner overflow-hidden relative">
+            <!-- Simulated application window -->
+            <div id="tePreview" class="w-[90%] h-[90%] rounded-xl shadow-2xl overflow-hidden flex relative" style="background: linear-gradient(135deg, #1e293b, #0f172a)">
+               <!-- Server/Sidebar column layout mock -->
+               <div class="w-16 h-full flex flex-col items-center py-4 bg-discord-gray-900/60 backdrop-blur-md gap-3">
+                  <div class="w-10 h-10 rounded-2xl bg-discord-blurple text-white flex items-center justify-center font-bold">Zy</div>
+                  <div class="w-6 border-b border-white/10"></div>
+                  <div class="w-10 h-10 rounded-full bg-white/10"></div>
+                  <div class="w-10 h-10 rounded-full bg-white/10"></div>
+               </div>
+               <!-- Channel list mock -->
+               <div class="w-48 h-full bg-discord-gray-800/80 backdrop-blur-md hidden sm:flex flex-col">
+                  <div class="h-12 border-b border-white/5 flex items-center px-4">
+                     <div class="h-4 w-24 bg-white/20 rounded"></div>
+                  </div>
+                  <div class="p-4 space-y-3">
+                     <div class="h-4 w-full bg-white/10 rounded"></div>
+                     <div class="h-4 w-3/4 bg-white/10 rounded"></div>
+                     <div class="h-4 w-5/6 bg-white/10 rounded"></div>
+                  </div>
+               </div>
+               <!-- Main content mock -->
+               <div class="flex-1 h-full flex flex-col">
+                  <div class="h-12 border-b border-white/5 bg-black/20 backdrop-blur-md flex items-center px-4">
+                     <div class="h-4 w-32 bg-white/10 rounded"></div>
+                  </div>
+                  <div class="flex-1 p-6 space-y-6">
+                     <div class="flex gap-4">
+                        <div class="w-10 h-10 rounded-full bg-indigo-500/50"></div>
+                        <div class="flex-1 space-y-2">
+                           <div class="h-4 w-20 bg-white/20 rounded"></div>
+                           <div class="h-16 w-full bg-black/20 rounded-xl border border-white/5"></div>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- Chat box mock -->
+                  <div class="p-4 mb-2">
+                     <div class="h-10 w-full rounded-full bg-white/5 border border-white/10 px-4 flex items-center">
+                        <div class="h-3 w-32 bg-white/10 rounded"></div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="px-6 py-4 border-t border-white/5 bg-[#111214]/80 flex justify-between items-center hidden md:flex">
+        <!-- Replaced Reset styling for elegance -->
+        <button id="teResetBtn" class="px-4 py-2 rounded-lg bg-transparent hover:bg-white/5 text-discord-gray-400 hover:text-white transition text-sm font-medium flex items-center gap-2">
+          <i data-feather="rotate-ccw" class="w-4 h-4"></i> Reset Defaults
+        </button>
+        <div class="flex gap-3">
+          <button id="teCancelBtn" class="px-6 py-2 rounded-lg bg-transparent hover:bg-white/10 text-discord-gray-300 transition text-sm font-medium">
+            Cancel
+          </button>
+          <button id="teApplyBgBtn" class="px-6 py-2 rounded-lg bg-discord-gray-700 hover:bg-discord-gray-600 text-white transition text-sm font-medium border border-white/5">
+            Preview Layout
+          </button>
+          <button id="teApplyThemeBtn" class="px-6 py-2 rounded-lg bg-gradient-to-r from-discord-blurple to-purple-500 hover:opacity-90 text-white font-bold transition text-sm shadow-lg shadow-purple-500/20">
+            Apply Full Theme
+          </button>
         </div>
       </div>
     </div>
 
     <div
       id="userViewModalOverlay"
-      class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[220] hidden"
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm modal-backdrop-blur z-[220] hidden"
       onclick="closeUserViewModal()"
     ></div>
     <div
@@ -5810,16 +5569,18 @@
         </div>
         <div class="px-4 pb-4 relative">
           <!-- Avatar container positioned over banner -->
-          <div class="absolute -top-[52px] left-3.5 rounded-full bg-[#232428] p-1.5 pointer-events-none">
-            <div class="relative">
+          <div class="absolute -top-[52px] left-3.5 rounded-full bg-[#232428] p-1 pointer-events-none">
+            <div class="avatar-container relative">
               <img
                 id="uvAvatar"
                 src="/images/default_avatar.png"
-                class="w-[84px] h-[84px] rounded-full bg-[#111214] object-cover pointer-events-auto shadow-sm"
+                class="w-[84px] h-[84px] rounded-full bg-[#111214] object-cover pointer-events-auto shadow-sm avatar-img"
               />
+              <div class="avatar-frame absolute inset-0 pointer-events-none rounded-full"></div>
+              <div class="avatar-effect absolute inset-0 pointer-events-none rounded-full"></div>
               <div
                 id="uvStatus"
-                class="absolute bottom-0 right-0 w-[18px] h-[18px] rounded-full border-[3px] border-[#232428] bg-gray-500 drop-shadow-sm box-content"
+                class="absolute -bottom-1 -right-1 w-[20px] h-[20px] rounded-full border-[4px] border-[#232428] bg-gray-500 drop-shadow-sm box-content status-dot pointer-events-auto z-10"
               ></div>
             </div>
           </div>
@@ -5879,7 +5640,7 @@
     <!-- QR Code Modal for Profile Sharing -->
     <div
       id="qrCodeModal"
-      class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[240] hidden flex items-center justify-center px-4"
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm modal-backdrop-blur z-[240] hidden flex items-center justify-center px-4"
     >
       <div
         class="bg-discord-gray-800 text-discord-gray-300 w-full max-w-xs p-6 rounded-xl shadow-2xl text-center"
@@ -5919,7 +5680,7 @@
 
     <div
       id="groupsModal"
-      class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] hidden flex items-center justify-center px-4"
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm modal-backdrop-blur z-[200] hidden flex items-center justify-center px-4"
     >
       <div
         class="bg-discord-gray-800 text-discord-gray-300 w-full max-w-md p-6 rounded-xl shadow-2xl flex flex-col"
@@ -6358,6 +6119,7 @@
     <script src="files/js/friends.js?v=2"></script>
     <script src="files/js/cloud.js"></script>
     <script src="files/js/moments.js"></script>
+    <script src="files/js/cosmetics.js"></script>
     <script src="files/js/effects.js"></script>
     <script src="/js/app-extras.js"></script>
     <script>
@@ -6602,20 +6364,21 @@
               updated.usertag;
             const el_aboutMe = document.getElementById("aboutMe");
             if (el_aboutMe) el_aboutMe.value = updated.aboutMe || "";
+            const _cb = '?t=' + Date.now(); // cache-bust
             document.getElementById("avatarImage").src =
-              updated.avatar || "/images/default_avatar.png";
+              (updated.avatar || "/images/default_avatar.png") + _cb;
             document.getElementById("bannerImage").src =
-              updated.banner || "/images/default_banner.png";
+              (updated.banner || "/images/default_banner.png") + _cb;
 
             // Update settings avatar and banner too
             const settingsAvatar = document.getElementById("settingsAvatar");
             const settingsBanner = document.getElementById("settingsBanner");
             if (settingsAvatar)
               settingsAvatar.src =
-                updated.avatar || "/images/default_avatar.png";
+                (updated.avatar || "/images/default_avatar.png") + _cb;
             if (settingsBanner)
               settingsBanner.src =
-                updated.banner || "/images/default_banner.png";
+                (updated.banner || "/images/default_banner.png") + _cb;
           } else {
             console.error("User not found");
           }
@@ -6834,7 +6597,7 @@
         if (z) z.value = "1";
       }
 
-      function applyCrop() {
+      async function applyCrop() {
         const canvas = cropper.getCroppedCanvas({
           width: currentTarget === "avatar" ? 200 : 800,
           height: currentTarget === "avatar" ? 200 : 250,
@@ -6870,8 +6633,15 @@
         }
 
         closeCropper();
-        document.getElementById("saveProfileBtn").classList.remove("hidden");
-        checkProfileChanges();
+        // Auto-save the profile immediately after crop (saveProfileBtn was removed from HTML)
+        const sp = document.getElementById("saveProfileBtn");
+        if (sp) sp.classList.remove("hidden");
+        try {
+          await saveProfileChanges();
+          if (typeof showToast !== "undefined") showToast("Profile updated!");
+        } catch (e) {
+          console.error("Auto-save after crop failed:", e);
+        }
       }
 
       async function loadUserData() {
@@ -6893,10 +6663,11 @@
             user.username || "N/A";
           document.getElementById("profileUsertag").textContent =
             user.usertag || "N/A";
+          const _cb2 = '?t=' + Date.now(); // cache-bust
           document.getElementById("avatarImage").src =
-            user.avatar || "/images/default_avatar.png";
+            (user.avatar || "/images/default_avatar.png") + _cb2;
           document.getElementById("bannerImage").src =
-            user.banner || "/images/default_banner.png";
+            (user.banner || "/images/default_banner.png") + _cb2;
 
           // Render Badges — use badges_active if the key exists (even if empty), otherwise fall back to all unlocked
           if (window.renderBadges) {
@@ -6921,9 +6692,9 @@
           const settingsAvatar = document.getElementById("settingsAvatar");
           const settingsBanner = document.getElementById("settingsBanner");
           if (settingsAvatar)
-            settingsAvatar.src = user.avatar || "/images/default_avatar.png";
+            settingsAvatar.src = (user.avatar || "/images/default_avatar.png") + '?t=' + Date.now();
           if (settingsBanner)
-            settingsBanner.src = user.banner || "/images/default_banner.png";
+            settingsBanner.src = (user.banner || "/images/default_banner.png") + '?t=' + Date.now();
 
           const shortBioText = (user.about && String(user.about).trim()) || "";
           const aboutText =
@@ -6936,10 +6707,24 @@
 
           if (user.settings) {
             const avatarEffect = user.settings.profileEffect || "none";
+            const avatarFrame = user.settings.profileFrame || "none";
             const bannerEffect = user.settings.bannerEffect || "none";
             setTimeout(() => {
-              applyAvatarEffect(avatarEffect);
-              applyBannerEffect(bannerEffect);
+              // Pass the .avatar-container, not the <img> — the function needs frame/effect child layers
+              const profileAvatarContainer = document.getElementById('avatarImage')?.closest('.avatar-container');
+              const settingsAvatarContainer = document.getElementById('settingsAvatar')?.closest('.avatar-container');
+              const userPanelAvatarContainer = document.getElementById('userPanelAvatar')?.closest('.avatar-container');
+              const collapsedAvatarContainer = document.getElementById('collapsedProfileAvatar')?.closest('.avatar-container');
+              if (profileAvatarContainer) applyAvatarCosmetics(profileAvatarContainer, avatarEffect, avatarFrame);
+              if (settingsAvatarContainer) applyAvatarCosmetics(settingsAvatarContainer, avatarEffect, avatarFrame);
+              if (userPanelAvatarContainer) applyAvatarCosmetics(userPanelAvatarContainer, avatarEffect, avatarFrame);
+              if (collapsedAvatarContainer) applyAvatarCosmetics(collapsedAvatarContainer, avatarEffect, avatarFrame);
+
+              // Banner: pass the parent wrapper div that contains the <img>
+              const bannerImg = document.getElementById('bannerImage');
+              if (bannerImg) applyBannerCosmetics(bannerImg.parentElement, bannerEffect);
+              const settingsBannerImg = document.getElementById('settingsBanner');
+              if (settingsBannerImg) applyBannerCosmetics(settingsBannerImg.parentElement, bannerEffect);
             }, 100);
           }
           checkProfileViewingUser();
@@ -7351,32 +7136,58 @@
 
       function openProfileEffectsModal() {
         const modal = document.getElementById("profileEffectsModal");
-        if (modal) {
-          modal.classList.remove("hidden");
-          document.body.classList.add("overflow-hidden");
+        if (!modal) return;
 
-          // Load current effects
-          const username = localStorage.getItem("username");
+        modal.classList.remove("hidden");
+        document.body.classList.add("overflow-hidden");
+
+        // Sync live preview avatar and banner with real elements if possible
+        const realAvatar = document.getElementById("avatarImage");
+        const livePreview = document.getElementById("livePreviewAvatar");
+        if (realAvatar && livePreview) {
+          livePreview.src = realAvatar.src;
+        }
+
+        // Re-render modal items from registry
+        if (typeof renderCosmeticsModal === 'function') renderCosmeticsModal();
+
+        // Reset to first tab
+        if (typeof switchCosmeticTab === 'function') switchCosmeticTab('avatarFrame');
+
+        // Load current effects from server
+        const username = localStorage.getItem("username");
+        if (username) {
           fetch(`/api/get-user?identifier=${encodeURIComponent(username)}`)
             .then((r) => r.json())
             .then((data) => {
-              if (data.success && data.user && data.user.settings) {
-                const settings = data.user.settings;
-                const avatarEffect = settings.profileEffect || "none";
-                const bannerEffect = settings.bannerEffect || "none";
+              if (data.success && data.user) {
+                const liveBannerImg = document.getElementById("livePreviewBannerImg");
+                if (liveBannerImg) liveBannerImg.src = data.user.banner || "/images/default_banner.png";
 
-                document.querySelector(
-                  `input[name="avatarEffect"][value="${avatarEffect}"]`,
-                ).checked = true;
-                document.querySelector(
-                  `input[name="bannerEffect"][value="${bannerEffect}"]`,
-                ).checked = true;
+                if (data.user.settings) {
+                  const settings = data.user.settings;
+                  const avatarEffect = settings.profileEffect || "none";
+                  const avatarFrame = settings.profileFrame || "none";
+                  const bannerEffect = settings.bannerEffect || "none";
+
+                  const effectRadio = document.querySelector(`input[name="avatarEffect"][value="${avatarEffect}"]`);
+                  if (effectRadio) effectRadio.checked = true;
+                  
+                  const frameRadio = document.querySelector(`input[name="profileFrame"][value="${avatarFrame}"]`);
+                  if (frameRadio) frameRadio.checked = true;
+
+                  const bannerRadio = document.querySelector(`input[name="bannerEffect"][value="${bannerEffect}"]`);
+                  if (bannerRadio) bannerRadio.checked = true;
+
+                  // Trigger live preview with loaded settings
+                  if (typeof updateLivePreview === 'function') updateLivePreview();
+                }
               }
             })
-            .catch(() => {});
-
-          feather.replace();
+            .catch((e) => console.error("Error loading cosmetics:", e));
         }
+
+        if (typeof feather !== 'undefined') feather.replace();
       }
 
       function closeProfileEffectsModal() {
@@ -7390,6 +7201,9 @@
       async function applyProfileEffects() {
         const avatarEffect =
           document.querySelector('input[name="avatarEffect"]:checked')?.value ||
+          "none";
+        const avatarFrame =
+          document.querySelector('input[name="profileFrame"]:checked')?.value ||
           "none";
         const bannerEffect =
           document.querySelector('input[name="bannerEffect"]:checked')?.value ||
@@ -7406,6 +7220,7 @@
               username,
               settings: {
                 profileEffect: avatarEffect,
+                profileFrame: avatarFrame,
                 bannerEffect: bannerEffect,
               },
             }),
@@ -7416,9 +7231,20 @@
             alert("Profile effects applied successfully!");
             closeProfileEffectsModal();
             setTimeout(() => {
-              // Apply effects immediately to DOM
-              applyAvatarEffect(avatarEffect);
-              applyBannerEffect(bannerEffect);
+              // Apply effects immediately to DOM — pass .avatar-container, not the <img>
+              const profileAvatarContainer = document.getElementById('avatarImage')?.closest('.avatar-container');
+              const settingsAvatarContainer = document.getElementById('settingsAvatar')?.closest('.avatar-container');
+              const userPanelAvatarContainer = document.getElementById('userPanelAvatar')?.closest('.avatar-container');
+              const collapsedAvatarContainer = document.getElementById('collapsedProfileAvatar')?.closest('.avatar-container');
+              if (profileAvatarContainer) applyAvatarCosmetics(profileAvatarContainer, avatarEffect, avatarFrame);
+              if (settingsAvatarContainer) applyAvatarCosmetics(settingsAvatarContainer, avatarEffect, avatarFrame);
+              if (userPanelAvatarContainer) applyAvatarCosmetics(userPanelAvatarContainer, avatarEffect, avatarFrame);
+              if (collapsedAvatarContainer) applyAvatarCosmetics(collapsedAvatarContainer, avatarEffect, avatarFrame);
+
+              const bannerImg = document.getElementById('bannerImage');
+              if (bannerImg) applyBannerCosmetics(bannerImg.parentElement, bannerEffect);
+              const settingsBannerImg = document.getElementById('settingsBanner');
+              if (settingsBannerImg) applyBannerCosmetics(settingsBannerImg.parentElement, bannerEffect);
             }, 100);
             loadUserData(); // Reload user data to ensure sync
           } else {
@@ -7726,15 +7552,29 @@
 
           // Build payload
           const currentServer = userData.user || {};
+
+          // Helper: normalize img.src to a clean relative path (strip origin + cache-bust params)
+          // Data URLs (from fresh crops) pass through untouched
+          function cleanSrc(src) {
+            if (!src) return '';
+            if (src.startsWith('data:')) return src; // base64 from fresh crop — send as-is
+            try {
+              const u = new URL(src, window.location.origin);
+              return u.pathname; // strips origin + query string, e.g. "/uploads/Dan/avatar.png"
+            } catch {
+              return src.split('?')[0]; // fallback: just strip query string
+            }
+          }
+
           const payload = {
             username,
             usertag: rawTag ? "@" + rawTag : "",
             avatar:
-              document.getElementById("avatarImage")?.src ||
+              cleanSrc(document.getElementById("avatarImage")?.src) ||
               currentServer.avatar ||
               "",
             banner:
-              document.getElementById("bannerImage")?.src ||
+              cleanSrc(document.getElementById("bannerImage")?.src) ||
               currentServer.banner ||
               "",
             about: shortBio,
@@ -7780,10 +7620,11 @@
           document.getElementById("profileUsertag").textContent = showTag
             ? "@" + showTag
             : "";
+          const _cb3 = '?t=' + Date.now(); // cache-bust after save
           document.getElementById("avatarImage").src =
-            updated.avatar || payload.avatar;
+            (updated.avatar || payload.avatar) + _cb3;
           document.getElementById("bannerImage").src =
-            updated.banner || payload.banner;
+            (updated.banner || payload.banner) + _cb3;
 
           const profileBio = document.getElementById("profileBio");
           if (profileBio)
@@ -7823,6 +7664,41 @@
           captureInitialProfileData?.();
           const sp = document.getElementById("saveProfileBtn");
           if (sp) sp.classList.add("hidden");
+
+          // LIVE UPDATE
+          if (typeof window.syncUserProfileUI !== 'function') {
+            window.syncUserProfileUI = function(un, av) {
+              const liveAv = av + '?t=' + Date.now();
+              // Invalidate cache
+              if (typeof window.avatarCache !== 'undefined') window.avatarCache.delete(un);
+              
+              // 1. Sidebar Profile Card
+              const upAvatar = document.getElementById("userPanelAvatar");
+              if (upAvatar) upAvatar.src = liveAv;
+              const colAvatar = document.getElementById("collapsedProfileAvatar");
+              if (colAvatar) colAvatar.src = liveAv;
+
+              // 2. Chat avatars
+              document.querySelectorAll(`img[alt="${un}'s avatar"]`).forEach(img => {
+                  img.src = liveAv;
+              });
+
+              // 3. Reply avatars
+              document.querySelectorAll(".reply-avatar").forEach(img => {
+                  const sibling = img.nextElementSibling;
+                  if (sibling && sibling.textContent === "@" + un) {
+                      img.src = liveAv;
+                  }
+              });
+              
+              // 4. Broadcast to others if possible
+              if (typeof window.socket !== 'undefined') {
+                  window.socket.emit('profile_update', { username: un });
+              }
+            };
+          }
+
+          window.syncUserProfileUI(payload.username, updated.avatar || payload.avatar);
 
           return { success: true, bio: returnedShort, about: returnedLong };
         } catch (err) {
@@ -7901,7 +7777,7 @@
         }
 
         const modalHtml = `
-        <div id="editAccountModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
+        <div id="editAccountModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm modal-backdrop-blur z-50 flex items-center justify-center p-4 animate-fadeIn">
             <div class="bg-discord-gray-800 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-white/10 flex flex-col transform transition-all scale-100">
                 <div class="p-6 pb-2">
                     <h2 class="text-2xl font-extrabold text-white tracking-wide text-center mb-2">${title}</h2>
@@ -7951,7 +7827,7 @@
         if (existing) existing.remove();
 
         const modalHtml = `
-        <div id="editAccountModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
+        <div id="editAccountModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm modal-backdrop-blur z-50 flex items-center justify-center p-4 animate-fadeIn">
             <div class="bg-discord-gray-800 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-white/10 flex flex-col transform transition-all scale-100">
                 <div class="p-6 pb-2">
                     <h2 class="text-2xl font-extrabold text-white tracking-wide text-center mb-2">Change Your Email</h2>
@@ -8172,9 +8048,9 @@
               const eEl = document.getElementById("currentEmail");
               if (eEl) eEl.textContent = user.email || "Hidden";
               const sa = document.getElementById("settingsAvatar");
-              if (sa) sa.src = user.avatar || "/images/default_avatar.png";
+              if (sa) sa.src = (user.avatar || "/images/default_avatar.png") + '?t=' + Date.now();
               const sb = document.getElementById("settingsBanner");
-              if (sb) sb.src = user.banner || "/images/default_banner.png";
+              if (sb) sb.src = (user.banner || "/images/default_banner.png") + '?t=' + Date.now();
               const pe = document.getElementById("profileEmail");
               if (pe) pe.textContent = user.email || "Hidden";
               const lang = localStorage.getItem("language") || "en";
@@ -8280,8 +8156,8 @@
         const username = localStorage.getItem("username");
         if (!username) return;
 
-        const avatar = document.getElementById("settingsAvatar")?.src || "";
-        const banner = document.getElementById("settingsBanner")?.src || "";
+        const rawAvatar = document.getElementById("settingsAvatar")?.src || "";
+        const rawBanner = document.getElementById("settingsBanner")?.src || "";
         const shortBio = (
           document.getElementById("settingsProfileBio")?.value || ""
         ).trim();
@@ -8289,21 +8165,20 @@
           document.getElementById("settingsAboutMe")?.value || ""
         ).trim();
 
-        // Convert data URLs to base64 if needed
-        let avatarData = avatar;
-        let bannerData = banner;
-
-        if (avatar.startsWith("data:")) {
-          avatarData = avatar;
-        } else if (avatar.startsWith("/uploads/")) {
-          avatarData = avatar;
+        // Normalize: data URLs pass through, HTTP URLs get stripped to relative paths
+        function cleanSettingsSrc(src) {
+          if (!src) return '';
+          if (src.startsWith('data:')) return src;
+          try {
+            const u = new URL(src, window.location.origin);
+            return u.pathname;
+          } catch {
+            return src.split('?')[0];
+          }
         }
 
-        if (banner.startsWith("data:")) {
-          bannerData = banner;
-        } else if (banner.startsWith("/uploads/")) {
-          bannerData = banner;
-        }
+        let avatarData = cleanSettingsSrc(rawAvatar);
+        let bannerData = cleanSettingsSrc(rawBanner);
 
         try {
           const res = await fetch("/api/update-profile", {
@@ -8360,6 +8235,11 @@
 
             // Reload account settings UI
             hydrateAccountSettings();
+
+            // LIVE UPDATE
+            if (typeof window.syncUserProfileUI === "function") {
+              window.syncUserProfileUI(username, updated.avatar || avatarData);
+            }
           }
         } catch (e) {
           console.error("Failed to save account settings:", e);
@@ -10118,7 +9998,7 @@
         setTimeout(() => {
           if (window.showToast)
             window.showToast(
-              "You are already on the latest version of Zylo (Beta 1.5.1).",
+              "You are already on the latest version of Zylo (Beta 0.5.12).",
               3000,
             );
           if (btn)
@@ -10136,7 +10016,7 @@
 
       function openChangelog() {
         const html = `
-            <div id="tempChangelogModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[500] flex items-center justify-center p-4 animate-fadeIn">
+            <div id="tempChangelogModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm modal-backdrop-blur z-[500] flex items-center justify-center p-4 animate-fadeIn">
                 <div class="bg-discord-gray-800 text-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden animate-pop">
                     <div class="px-6 py-4 border-b border-discord-gray-700 flex justify-between items-center bg-discord-gray-900/50">
                         <h2 class="text-xl font-bold flex items-center gap-2">
@@ -10213,7 +10093,7 @@
 
       function openPrivacyPolicy() {
         const html = `
-            <div id="tempPrivacyModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[500] flex items-center justify-center p-4 animate-fadeIn">
+            <div id="tempPrivacyModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm modal-backdrop-blur z-[500] flex items-center justify-center p-4 animate-fadeIn">
                 <div class="bg-discord-gray-800 text-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden animate-pop">
                     <div class="px-6 py-4 border-b border-discord-gray-700 flex justify-between items-center bg-discord-gray-900/50">
                         <h2 class="text-xl font-bold flex items-center gap-2">
@@ -12115,35 +11995,37 @@
 
         function applyThemeVars(t) {
           document.body.classList.add("theme-custom");
+          
+          const hex2rgb = (c, def) => {
+            if(typeof c === 'string' && c.startsWith('#')) {
+              let h = c.substring(1);
+              if(h.length===3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+              const val = parseInt(h, 16);
+              return `${(val>>16)&255} ${(val>>8)&255} ${val&255}`;
+            }
+            return def;
+          };
+
           document.body.style.setProperty("--navbar-bg", t.ui.navbarBg);
           document.body.style.setProperty("--sidebar-bg", t.ui.sidebarBg);
           document.body.style.setProperty("--panel-bg", t.ui.panelBg);
           document.body.style.setProperty("--text-color", t.textColor);
           document.body.style.setProperty("--accent-color", t.accentColor);
-          document.body.style.setProperty(
-            "--main-bg",
-            t.ui.mainBg || "#0f172a",
-          );
-          document.body.style.setProperty(
-            "--header-bg",
-            t.ui.headerBg || t.ui.navbarBg,
-          );
-          document.body.style.setProperty(
-            "--user-panel-bg",
-            t.ui.userPanelBg || t.ui.sidebarBg,
-          );
-          document.body.style.setProperty(
-            "--user-panel-bg",
-            t.ui.userPanelBg || t.ui.sidebarBg,
-          );
-          document.body.style.setProperty(
-            "--bg-hover",
-            t.ui.hoverBg || "rgba(255,255,255,0.1)",
-          );
-          document.body.style.setProperty(
-            "--bg-active",
-            t.ui.activeBg || t.accentColor || "#5865F2",
-          );
+          document.body.style.setProperty("--main-bg", t.ui.mainBg || "#0f172a");
+          document.body.style.setProperty("--header-bg", t.ui.headerBg || t.ui.navbarBg);
+          document.body.style.setProperty("--user-panel-bg", t.ui.userPanelBg || t.ui.sidebarBg);
+          document.body.style.setProperty("--bg-hover", t.ui.hoverBg || "rgba(255,255,255,0.1)");
+          document.body.style.setProperty("--bg-active", t.ui.activeBg || t.accentColor || "#5865F2");
+          
+          // Inject RGB tokens for Tailwind's dynamic opacity classes
+          document.body.style.setProperty("--color-discord-gray-900", hex2rgb(t.ui.headerBg || t.ui.navbarBg, "32 34 37"));
+          document.body.style.setProperty("--color-discord-gray-800", hex2rgb(t.ui.sidebarBg, "47 49 54"));
+          document.body.style.setProperty("--color-discord-gray-700", hex2rgb(t.ui.mainBg || t.ui.navbarBg, "54 57 63"));
+          document.body.style.setProperty("--color-discord-gray-600", hex2rgb(t.ui.panelBg, "64 68 75"));
+          document.body.style.setProperty("--color-discord-gray-500", hex2rgb(t.ui.userPanelBg || t.ui.sidebarBg, "79 84 92"));
+          document.body.style.setProperty("--color-discord-gray-400", hex2rgb(t.textColor, "185 187 190")); 
+          document.body.style.setProperty("--color-discord-gray-300", hex2rgb(t.textColor, "220 221 222"));
+          document.body.style.setProperty("--color-discord-blurple", hex2rgb(t.accentColor, "88 101 242"));
         }
 
         function applyThemeBackground(bg) {
@@ -12680,221 +12562,6 @@
         }
       }
 
-      function applyBannerEffect(effect) {
-        console.log("Applying banner effect:", effect);
-        const bannerImg = document.getElementById("bannerImage");
-        const settingsBanner = document.getElementById("settingsBanner");
-        const bannerContainer = document.querySelector(".profile-banner");
-
-        console.log("Banner elements found:", {
-          bannerImg: !!bannerImg,
-          settingsBanner: !!settingsBanner,
-          bannerContainer: !!bannerContainer,
-        });
-
-        // Remove all effect classes and inline styles first
-        [bannerImg, settingsBanner].forEach((el) => {
-          if (!el) return;
-          el.className = el.className.replace(/banner-effect-\w+/g, ""); // Remove old classes
-          el.style.boxShadow = ""; // Remove inline styles
-          el.style.border = "";
-          el.style.filter = "";
-        });
-
-        // Remove overlay from container
-        if (bannerContainer) {
-          bannerContainer.className = bannerContainer.className.replace(
-            /banner-effect-\w+/g,
-            "",
-          );
-          const overlay = bannerContainer.querySelector(
-            ".banner-effect-overlay",
-          );
-          if (overlay) overlay.remove();
-        }
-
-        if (effect && effect !== "none") {
-          console.log("Applying effect:", effect);
-          if (effect === "glow") {
-            [bannerImg, settingsBanner].forEach((el) => {
-              // Apply new effects using inline styles for reliability
-              if (el) {
-                el.style.setProperty(
-                  "box-shadow",
-                  "0 0 20px rgba(0, 255, 255, 0.6), 0 0 40px rgba(0, 255, 255, 0.4)",
-                  "important",
-                );
-                el.style.setProperty(
-                  "border",
-                  "2px solid rgba(0, 255, 255, 0.5)",
-                  "important",
-                );
-                console.log("Applied glow to:", el.id, el.style.boxShadow);
-              }
-            });
-          } else if (effect === "blur-overlay") {
-            if (bannerContainer) {
-              let overlay = bannerContainer.querySelector(
-                ".banner-effect-overlay",
-              );
-              if (!overlay) {
-                overlay = document.createElement("div");
-                overlay.className = "banner-effect-overlay";
-                overlay.style.cssText =
-                  "position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(4px); pointer-events: none; z-index: 2; border-radius: 1rem 1rem 0 0;";
-                bannerContainer.style.position = "relative";
-                bannerContainer.appendChild(overlay);
-              }
-            }
-          } else if (effect === "gradient-overlay") {
-            if (bannerContainer) {
-              let overlay = bannerContainer.querySelector(
-                ".banner-effect-overlay",
-              );
-              if (!overlay) {
-                overlay = document.createElement("div");
-                overlay.className = "banner-effect-overlay";
-                overlay.style.cssText =
-                  "position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(255, 0, 150, 0.4) 0%, rgba(0, 255, 255, 0.4) 50%, rgba(255, 255, 0, 0.4) 100%); pointer-events: none; z-index: 2; border-radius: 1rem 1rem 0 0;";
-                bannerContainer.style.position = "relative";
-                bannerContainer.appendChild(overlay);
-              }
-            }
-          } else if (effect === "vignette") {
-            if (bannerContainer) {
-              let overlay = bannerContainer.querySelector(
-                ".banner-effect-overlay",
-              );
-              if (!overlay) {
-                overlay = document.createElement("div");
-                overlay.className = "banner-effect-overlay";
-                overlay.style.cssText =
-                  "position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, 0.6) 100%); pointer-events: none; z-index: 2; border-radius: 1rem 1rem 0 0;";
-                bannerContainer.style.position = "relative";
-                bannerContainer.appendChild(overlay);
-              }
-            }
-          } else if (effect === "neon-glow") {
-            [bannerImg, settingsBanner].forEach((el) => {
-              if (el) {
-                el.style.setProperty(
-                  "box-shadow",
-                  "0 0 30px rgba(255, 0, 255, 0.8), 0 0 60px rgba(0, 255, 255, 0.6)",
-                  "important",
-                );
-                el.style.setProperty(
-                  "border",
-                  "3px solid rgba(255, 0, 255, 0.7)",
-                  "important",
-                );
-                console.log("Applied neon-glow to:", el.id, el.style.boxShadow);
-              }
-            });
-          }
-          console.log("Banner effect applied:", effect);
-        } else {
-          console.log("No banner effect (none)");
-        }
-      }
-
-      function applyAvatarEffect(effect) {
-        console.log("Applying avatar effect:", effect);
-        const avatarImg = document.getElementById("avatarImage");
-        const settingsAvatar = document.getElementById("settingsAvatar");
-
-        console.log("Avatar elements found:", {
-          avatarImg: !!avatarImg,
-          settingsAvatar: !!settingsAvatar,
-        });
-
-        // Remove all effect classes and inline styles first
-        [avatarImg, settingsAvatar].forEach((el) => {
-          if (!el) return;
-          el.className = el.className.replace(/avatar-effect-\w+/g, ""); // Remove old classes
-          el.style.boxShadow = ""; // Remove inline styles
-          el.style.animation = "";
-          el.style.filter = "";
-          el.style.border = "";
-          const ring = el.parentElement?.querySelector(".avatar-effect-ring"); // Remove overlay/ring elements
-          if (ring) ring.remove();
-        });
-
-        if (effect && effect !== "none") {
-          console.log("Applying avatar effect:", effect);
-          if (effect === "glow") {
-            // Apply new effects using inline styles for reliability
-            [avatarImg, settingsAvatar].forEach((el) => {
-              if (el) {
-                el.style.setProperty(
-                  "box-shadow",
-                  "0 0 10px rgba(99, 102, 241, 0.6), 0 0 20px rgba(59, 130, 246, 0.4), 0 0 30px rgba(236, 72, 153, 0.3)",
-                  "important",
-                );
-                el.style.setProperty(
-                  "animation",
-                  "glowPulse 3s ease-in-out infinite",
-                  "important",
-                );
-                console.log(
-                  "Applied glow to avatar:",
-                  el.id,
-                  el.style.boxShadow,
-                );
-              }
-            });
-          } else if (effect === "pulse") {
-            [avatarImg, settingsAvatar].forEach((el) => {
-              if (el) {
-                el.style.setProperty(
-                  "animation",
-                  "pulseAvatar 2s ease-in-out infinite",
-                  "important",
-                );
-                console.log("Applied pulse to avatar:", el.id);
-              }
-            });
-          } else if (effect === "ring") {
-            [avatarImg, settingsAvatar].forEach((el) => {
-              if (el && el.parentElement) {
-                let ring = el.parentElement.querySelector(
-                  ".avatar-effect-ring",
-                );
-                if (!ring) {
-                  ring = document.createElement("div");
-                  ring.className = "avatar-effect-ring";
-                  ring.style.cssText =
-                    "position: absolute; inset: -8px; border-radius: 50%; background: conic-gradient(from 0deg, rgba(96,165,250,0.6), rgba(167,139,250,0.55), rgba(244,114,182,0.5), rgba(96,165,250,0.6)); filter: blur(2px); z-index: -1; pointer-events: none; animation: ringRotate 3s linear infinite;";
-                  el.parentElement.style.position = "relative";
-                  el.parentElement.appendChild(ring);
-                }
-              }
-            });
-          } else if (effect === "sparkle") {
-            [avatarImg, settingsAvatar].forEach((el) => {
-              if (el) {
-                el.style.setProperty(
-                  "box-shadow",
-                  "0 0 8px rgba(255, 255, 255, 0.8), 0 0 16px rgba(255, 255, 255, 0.6)",
-                  "important",
-                );
-                el.style.setProperty(
-                  "filter",
-                  "drop-shadow(0 0 4px rgba(255, 255, 255, 0.8))",
-                  "important",
-                );
-                console.log(
-                  "Applied sparkle to avatar:",
-                  el.id,
-                  el.style.boxShadow,
-                );
-              }
-            });
-          }
-          console.log("Avatar effect applied:", effect);
-        } else {
-          console.log("No avatar effect (none)");
-        }
-      }
     </script>
     <!-- Groups Modal -->
     <div
@@ -13129,7 +12796,7 @@
     <!-- Call UI Modal (Zalo Style) -->
     <div
       id="callModal"
-      class="fixed inset-0 bg-gray-900/90 z-[60] hidden flex flex-col items-center justify-between py-12 fade-in backdrop-blur-sm"
+      class="fixed inset-0 bg-gray-900/90 z-[60] hidden flex flex-col items-center justify-between py-12 fade-in backdrop-blur-sm modal-backdrop-blur"
     >
       <!-- Header info -->
       <div class="flex flex-col items-center gap-4 mt-8">
@@ -13194,7 +12861,7 @@
     <!-- Apps Modal -->
     <div
       id="appsModal"
-      class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] hidden flex items-center justify-center px-4"
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm modal-backdrop-blur z-[200] hidden flex items-center justify-center px-4"
     >
       <div
         class="bg-discord-gray-800 text-discord-gray-300 w-full max-w-md max-h-[90vh] overflow-y-auto p-6 rounded-xl shadow-2xl"
@@ -13219,7 +12886,7 @@
     <!-- Image Viewer Modal -->
     <div
       id="imageViewerModal"
-      class="fixed inset-0 bg-black/90 backdrop-blur-md z-[300] hidden flex items-center justify-center cursor-zoom-out transition-opacity duration-200"
+      class="fixed inset-0 bg-black/90 backdrop-blur-md modal-backdrop-blur z-[300] hidden flex items-center justify-center cursor-zoom-out transition-opacity duration-200"
       onclick="closeImageViewer()"
     >
       <img
@@ -13578,7 +13245,7 @@
     <!-- Lightbox Modal -->
     <div
       id="lightboxModal"
-      class="fixed inset-0 bg-black/95 z-[60] hidden flex items-center justify-center p-4 backdrop-blur-sm"
+      class="fixed inset-0 bg-black/95 z-[60] hidden flex items-center justify-center p-4 backdrop-blur-sm modal-backdrop-blur"
       onclick="closeLightbox()"
     >
       <img
@@ -14374,7 +14041,7 @@
           themeSyncToggle.addEventListener("change", (e) => localStorage.setItem("themeSyncEnabled", e.target.checked));
         }
 
-        // Developer Mode + AI Chat Visibility
+        // Developer Mode + AI Chat Visibility + Advanced Theme Editor
         window.toggleAIChatVisibility = function(isDev) {
           const btnRoomAI = document.getElementById("btnRoomAI");
           const aiControls = document.getElementById("aiControls");
@@ -14391,15 +14058,32 @@
           }
         };
 
+        window.toggleAdvancedThemeButton = function(isDev) {
+          const btn = document.getElementById("advanceThemeEditorBtn");
+          const text = document.getElementById("advanceThemeEditorBtnText");
+          if (!btn || !text) return;
+          if (isDev) {
+            btn.disabled = false;
+            btn.classList.remove("opacity-50", "cursor-not-allowed", "grayscale");
+            text.textContent = "Open Editor";
+          } else {
+            btn.disabled = true;
+            btn.classList.add("opacity-50", "cursor-not-allowed", "grayscale");
+            text.textContent = "In-Dev";
+          }
+        };
+
         const devModeToggle = document.getElementById("advanceDevMode");
         if (devModeToggle) {
           const isDev = localStorage.getItem("developerModeEnabled") === "true";
           devModeToggle.checked = isDev;
           window.toggleAIChatVisibility(isDev);
+          window.toggleAdvancedThemeButton(isDev);
           devModeToggle.addEventListener("change", (e) => {
             const checked = e.target.checked;
             localStorage.setItem("developerModeEnabled", checked);
             window.toggleAIChatVisibility(checked);
+            window.toggleAdvancedThemeButton(checked);
           });
         }
 
@@ -14470,7 +14154,7 @@
     <!-- Pinned Messages Modal -->
     <div
       id="pinnedMessagesModal"
-      class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center backdrop-blur-sm"
+      class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center backdrop-blur-sm modal-backdrop-blur"
     >
       <div
         class="bg-discord-gray-800 rounded-lg w-full max-w-md p-4 shadow-2xl border border-discord-gray-700 mx-4"
@@ -14497,7 +14181,7 @@
       </div>
     </div>
     <!-- Secure Action Wizard Modal -->
-    <div id="secureWizardModal" class="fixed inset-0 bg-black/60 hidden z-[100] flex items-center justify-center backdrop-blur-md transition-all duration-300 opacity-0">
+    <div id="secureWizardModal" class="fixed inset-0 bg-black/60 hidden z-[100] flex items-center justify-center backdrop-blur-md modal-backdrop-blur transition-all duration-300 opacity-0">
       <div id="secureWizardContainer" class="bg-discord-gray-800 rounded-2xl w-full max-w-sm p-6 shadow-2xl border border-discord-gray-700 mx-4 transform transition-all duration-300 scale-95 origin-center">
         <!-- Header -->
         <div class="flex flex-col mb-6">

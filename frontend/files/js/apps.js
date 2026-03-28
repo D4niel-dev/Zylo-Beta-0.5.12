@@ -412,7 +412,7 @@ function openAppModal(appName) {
                </div>
 
                <!-- Battle Log -->
-               <div id="rpgLog" class="bg-[#0f1115] border border-black/20 shadow-inner rounded-xl p-3 h-36 overflow-y-auto text-xs font-mono text-gray-300 flex flex-col gap-1.5 scrollbar-thin">
+               <div id="rpgLog" class="bg-discord-gray-900 border border-black/20 shadow-inner rounded-xl p-3 h-36 overflow-y-auto text-xs font-mono text-discord-gray-300 flex flex-col gap-1.5 scrollbar-thin">
                    <div class="text-purple-400 font-bold">Welcome to Zylo Slayer! Battle commencing...</div>
                </div>
 
