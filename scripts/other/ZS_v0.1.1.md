@@ -238,7 +238,7 @@ Implement a clean elemental interaction model.
 - Fire > Earth
 - Fire < Water
 - Wind > Water
-- Wind > Earth
+- Wind < Earth
 - If elements do not counter each other: **100% output**
 - If attacker counters defender: **135% output**
 - If attacker is countered by defender: **85% output**
