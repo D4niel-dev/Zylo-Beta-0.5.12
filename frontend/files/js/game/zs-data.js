@@ -1308,17 +1308,38 @@ window.ZS_Data.QUEST_POOL = {
     "repeated": [
         {
             "id": "r1",
-            "name": "Clear Stage 10",
-            "type": "stage",
-            "target": 10,
-            "gemReward": 10
+            "name": "Defeat 100 Monsters",
+            "type": "kill",
+            "target": 100,
+            "gemReward": 25
         },
         {
             "id": "r2",
-            "name": "Craft an Item",
+            "name": "Upgrade Status 5 Times",
+            "type": "upgrade",
+            "target": 5,
+            "gemReward": 15
+        },
+        {
+            "id": "r3",
+            "name": "Summon 5 Times",
+            "type": "summon",
+            "target": 5,
+            "gemReward": 20
+        },
+        {
+            "id": "r4",
+            "name": "Merge 5 Items",
             "type": "craft",
-            "target": 1,
-            "gemReward": 10
+            "target": 5,
+            "gemReward": 15
+        },
+        {
+            "id": "r5",
+            "name": "Defeat 5 Bosses",
+            "type": "boss",
+            "target": 5,
+            "gemReward": 25
         }
     ],
     "achievements": [

@@ -369,20 +369,27 @@ window.ZS_UI = {
         const list = document.getElementById('zsStageList');
         if (!list) return;
         
+        if (state.stage > state.highestStage) {
+            state.highestStage = state.stage;
+        }
+        
         let html = `<div class="text-xs text-gray-400 mb-2">Highest Cleared: Stage ${state.highestStage}</div>
                     <div class="text-xs text-blue-400 mb-4 bg-blue-500/10 p-2 rounded border border-blue-500/20">Recommended Farming: Stage ${window.ZS_Stages.getRecommendedStage()}</div>
                     <div class="grid grid-cols-5 gap-2 max-h-60 overflow-y-auto pr-2 scrollbar-thin">`;
                     
-        for (let i = 1; i <= state.highestStage + 1; i++) {
+        for (let i = 1; i <= 1000; i++) {
              const isCurrent = i === state.stage;
              if (isCurrent) {
                   html += `<button class="bg-purple-500 text-white border border-purple-400 text-xs py-2 rounded shadow-md cursor-default flex flex-col items-center"><div>${i}</div><div class="text-[8px]">Active</div></button>`;
-             } else {
+             } else if (i <= state.highestStage + 1) {
                   html += `<button onclick="window.ZS_Stages.playStage(${i})" class="bg-discord-gray-800 text-gray-300 hover:bg-white/10 hover:text-white border border-white/5 text-xs py-2 rounded transition flex flex-col items-center"><div>${i}</div><div class="text-[8px]">Play</div></button>`;
+             } else {
+                  html += `<button class="bg-black/50 text-gray-700 border border-black cursor-not-allowed text-xs py-2 rounded flex flex-col items-center"><div>${i}</div><div class="text-[8px] mt-0.5"><i data-feather="lock" class="w-3 h-3 text-gray-700"></i></div></button>`;
              }
         }
         html += `</div>`;
         list.innerHTML = html;
+        if (typeof feather !== 'undefined') feather.replace();
     },
 
     showSummonResults: function(results, type) {

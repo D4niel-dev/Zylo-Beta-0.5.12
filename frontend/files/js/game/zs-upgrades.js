@@ -62,8 +62,10 @@ window.ZS_Upgrades = {
         if (type === 'regen') { state.stats.regen += 2; state.costs.regen = Math.floor(cost * 2.5); }
         if (type === 'crit') { 
             if (state.stats.crit < 100) { state.stats.crit += 1; state.costs.crit = Math.floor(cost * 1.8); }
-            else { alert("Max Crit Reached."); state.gold += cost; }
+            else { alert("Max Crit Reached."); state.gold += cost; return false; }
         }
+        
+        if (window.ZS_Quests) window.ZS_Quests.registerUpgrade(1);
         
         window.ZyloSlayer.saveGame();
         if (window.ZS_UI) window.ZS_UI.renderStatsTab();

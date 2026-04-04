@@ -210,14 +210,22 @@ window.ZS_Combat = {
         
         // Boss progression
         if (this.enemy.isBoss) {
-            if (state.stage === state.highestStage) {
-                 state.highestStage++;
+            if (state.stage >= state.highestStage) {
+                 state.highestStage = state.stage;
             }
             state.stage++;
             state.killsInStage = 0;
             this.log(`STAGE CLEARED! Advancing to Stage ${state.stage}.`, 'text-blue-400 font-bold drop-shadow-sm');
         } else {
             state.killsInStage++;
+            if (state.killsInStage >= 10) {
+                if (state.stage >= state.highestStage) {
+                     state.highestStage = state.stage;
+                }
+                state.stage++;
+                state.killsInStage = 0;
+                this.log(`STAGE CLEARED! Advancing to Stage ${state.stage}.`, 'text-blue-400 font-bold drop-shadow-sm');
+            }
         }
         
         // Level up

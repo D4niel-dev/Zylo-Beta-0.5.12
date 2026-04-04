@@ -23,9 +23,9 @@ window.ZS_Quests = {
             state.lastWeeklyReset = now;
         }
         
-        // Initialize repeated and achievements if empty
-        if (!state.quests.repeated || state.quests.repeated.length === 0) {
-            this.generateQuests('repeated', 2);
+        // Initialize repeated and achievements if empty or outdated
+        if (!state.quests.repeated || state.quests.repeated.length < 5) {
+            this.generateQuests('repeated', 5);
         }
         
         if (!state.quests.achievements || state.quests.achievements.length === 0) {
@@ -80,6 +80,10 @@ window.ZS_Quests = {
     
     registerLevel: function(level) {
         this.advanceProgress('level', level, true); // true = absolute value, not increment
+    },
+    
+    registerUpgrade: function(amount) {
+        this.advanceProgress('upgrade', amount);
     },
     
     registerStage: function(stage) {
